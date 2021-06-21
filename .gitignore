@@ -1,0 +1,14 @@
+node_modules
+/dist
+/vue-dist
+/vue-pages
+/vue-public
+
+# local env files
+
+# Log files
+/database/.pm2
+
+# Editor directories and files
+.idea
+
