@@ -5,22 +5,7 @@ import store from '../../store/index'
 import Engine from './../../utils/engine_module.js';
 Vue.prototype.$Engine = Engine;
 
-import {
-  NavBar,
-  Form,
-  Field,
-  Button,
-  List,
-  PullRefresh,
-  Cell,
-  CellGroup,
-  Popup,
-  IndexBar,
-  IndexAnchor,
-  Uploader,
-  ActionSheet,
-  Image as VanImage, Grid, GridItem, ImagePreview
-} from 'vant';
+import { NavBar, Form, Field, Button, List, PullRefresh, Cell, CellGroup, Popup, IndexBar, IndexAnchor, Uploader, ActionSheet } from 'vant';
 Vue.use(NavBar);
 Vue.use(Form);
 Vue.use(Field);
@@ -34,10 +19,6 @@ Vue.use(IndexBar);
 Vue.use(IndexAnchor);
 Vue.use(Uploader);
 Vue.use(ActionSheet);
-Vue.use(VanImage);
-Vue.use(Grid);
-Vue.use(GridItem);
-Vue.use(ImagePreview);
 
 
 let bus = new Vue;

@@ -61,10 +61,17 @@
 
     import { Toast } from 'vant';
 
+    // const page_static = {
+    //     model_name: 'wx_old_part_regist',
+    //     main_ado_name: 'wx_user',
+    //     save_act: 'Save',
+    //     add_act: 'Add',
+    // };
+
     const page_static = {
-        model_name: 'wx_old_part_regist',
-        main_ado_name: 'wx_user',
-        save_act: 'Save',
+        model_name: 'clock_in_empl',
+        main_ado_name: 'SARS_EMPL',
+        save_act: 'Regist',
         add_act: 'Add',
     };
 

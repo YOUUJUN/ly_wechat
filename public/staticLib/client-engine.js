@@ -484,7 +484,7 @@
          *            s
          */
         loadData: function (s) {
-            console.log('---------load---------');
+            console.log('---------load---------',s);
             if (s) {
                 if ((typeof (s) === "string") || (s instanceof String)) {
                     if (!s.startsWith("{") || !s.endsWith("}")) {
@@ -766,6 +766,7 @@
                 $e.request(amn, 'call', options._act, null, null, options);
             }
         }
+
         return true;
     },
 
@@ -934,7 +935,8 @@
     };
 
     // $e._baseURI = 'http://erp.bfcgj.com/';
-    $e._baseURI = 'http://60.173.9.77:15280/';
+    // $e._baseURI = 'http://60.173.9.77:15280/';
+    $e._baseURI =  'http://60.173.9.77:15380/dev/';
     //$e._baseURI = 'http://60.173.9.72/';
 
 

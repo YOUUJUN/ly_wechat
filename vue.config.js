@@ -90,17 +90,6 @@ module.exports = function(){
             port : 8080,
             hot : true,
             open: false, //是否自动打开浏览器
-            "proxy" : {
-                "/cloud" : {
-                    "target" : "http://60.173.9.77:15280/",
-                    "changeOrigin" : true,
-                    "secure" : false,
-                    "pathRewrite" : {
-                        "^/cloud" : "/"
-                    }
-                }
-            },
-
         },
         productionSourceMap : true, //开启后出错的时候，除错工具将直接显示原始代码，而不是转换后的代码。关闭可以减少打包体积
         configureWebpack : {
