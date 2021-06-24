@@ -97,19 +97,20 @@
             },
 
             onSubmit(values) {
-                console.log('submit', values);
+                console.log('submit', this.$e);
                 this.$e.call(page_static.model_name, page_static.act_post, null, null, {
                     params : {
                         verifycode : this.sms
                     }
                 }).then(res => {
-                    window.open('/Query','_self');
+                    window.open('/old_part/Query.html','_self');
                 }).catch(err => {
                     Toast('验证码验证失败!');
                 });
             },
 
             sendCode(){
+                let vm = this;
                 this.$refs['form'].validate('phone').then(res => {
                     this.$e.call(page_static.model_name, page_static.act_send, null, null, {
                         params : {

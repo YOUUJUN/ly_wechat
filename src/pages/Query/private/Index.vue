@@ -186,6 +186,10 @@
                 adapter.mappingData(list_module.comp_ado_name, "brandsList");
                 this.getBrandsData();
             }
+
+            this.$bus.$on('ok',(res)=>{
+                this.search();
+            })
         },
 
         computed : {

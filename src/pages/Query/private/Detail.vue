@@ -150,7 +150,7 @@
         methods : {
             onClickLeft() {
                 this.$router.go(-1);
-
+                this.$bus.$emit('ok')
             },
 
 
