@@ -46,20 +46,19 @@
                 >
                     <!--                    <van-cell title="物料：ABS泵" value="内容" label="详细信息" />-->
 
-<!--                    <van-cell value="查看详情" is-link @click="goDetail">-->
-<!--                        <template #title>-->
-<!--                            <span class="custom-title" style="font-size: 15px">name</span>-->
-<!--                            &lt;!&ndash;                            <van-tag type="danger">标签</van-tag>&ndash;&gt;-->
-<!--                        </template>-->
+                    <!--                    <van-cell value="查看详情" is-link @click="goDetail">-->
+                    <!--                        <template #title>-->
+                    <!--                            <span class="custom-title" style="font-size: 15px">name</span>-->
+                    <!--                            &lt;!&ndash;                            <van-tag type="danger">标签</van-tag>&ndash;&gt;-->
+                    <!--                        </template>-->
 
-<!--                        <template #label>-->
-<!--                            <div class="custom-title">年款:</div>-->
-<!--                            <div class="custom-title">品牌：</div>-->
-<!--                            <div class="custom-title">系列：</div>-->
-<!--                        </template>-->
+                    <!--                        <template #label>-->
+                    <!--                            <div class="custom-title">年款:</div>-->
+                    <!--                            <div class="custom-title">品牌：</div>-->
+                    <!--                            <div class="custom-title">系列：</div>-->
+                    <!--                        </template>-->
 
-<!--                    </van-cell>-->
-
+                    <!--                    </van-cell>-->
 
                     <van-cell value="查看详情" is-link v-for="item of partList" @click="goDetail(item.__rowid)">
                         <template #title>
@@ -98,8 +97,6 @@
 
 
 
-
-
                 </van-index-bar>
 
 
@@ -120,7 +117,7 @@
 
         </footer>
 
-    </div>
+</div>
 </template>
 <script>
 
@@ -173,17 +170,22 @@
         },
 
         beforeCreate(){
-            this.$e = new this.$Engine();
+            if(!this.$e){
+                this.$e = new this.$Engine();
+            }
         },
 
         created(){
 
-            let adapter = this.$e.getActiveModule(page_static.moduleName, true).createAdapter(this, true);
-            adapter.mappingData(page_static.comp_ado_name, "partList");
+            console.log('get in=======>',this.partList);
+            if(this.partList.length === 0){
+                let adapter = this.$e.getActiveModule(page_static.moduleName, true).createAdapter(this, true);
+                adapter.mappingData(page_static.comp_ado_name, "partList");
 
-            adapter = this.$e.getActiveModule(list_module.moduleName, true).createAdapter(this, true);
-            adapter.mappingData(list_module.comp_ado_name, "brandsList");
-            this.getBrandsData();
+                adapter = this.$e.getActiveModule(list_module.moduleName, true).createAdapter(this, true);
+                adapter.mappingData(list_module.comp_ado_name, "brandsList");
+                this.getBrandsData();
+            }
         },
 
         computed : {
@@ -253,11 +255,9 @@
                     _act: '',
                 }).then(function (res) {
 
-                    vm.$bus.$emit("ok",this.$e);
-
                 }).catch(err =>{
                     console.log("err ============>",err);
-                    console.log("this.brandsList ===>",this.brandsList);
+                    console.log("this.brandsList ===>",vm.brandsList);
                 });
 
             },

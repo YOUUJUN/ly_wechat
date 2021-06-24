@@ -95,7 +95,7 @@
                     <van-popup v-model="showBatterPicker" position="bottom">
                         <van-picker
                                 show-toolbar
-                                :columns="batteryColumns"
+                                :columns="batteryColumns2"
                                 @confirm="onBatteryConfirm"
                                 @cancel="showBatterPicker = false"
                         />
@@ -177,6 +177,7 @@
 
 
                 batteryColumns: ['完整', '缺失'],
+                batteryColumns2 : ['完整', '缺失'],
                 showBatterPicker : false,
                 showTWCPicker : false,
                 showResult : false,

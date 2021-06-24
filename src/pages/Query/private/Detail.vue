@@ -42,25 +42,27 @@
 
             <h2 class="title">物料图片</h2>
 
-            <van-grid :border="false" :column-num="3">
-                <van-grid-item @click="showImg()">
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-1.jpg" />
+            <van-grid :border="false" :column-num="3" v-if="imgList.length > 0">
+<!--                <van-grid-item @click="showImg()">-->
+<!--                    <van-image src="https://img01.yzcdn.cn/vant/apple-1.jpg" />-->
+<!--                </van-grid-item>-->
+<!--                <van-grid-item>-->
+<!--                    <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />-->
+<!--                </van-grid-item>-->
+<!--                <van-grid-item>-->
+<!--                    <van-image src="https://img01.yzcdn.cn/vant/apple-1.jpg" />-->
+<!--                </van-grid-item>-->
+<!--                <van-grid-item>-->
+<!--                    <van-image src="https://img01.yzcdn.cn/vant/apple-2.jpg" />-->
+<!--                </van-grid-item>-->
+<!--                <van-grid-item>-->
+<!--                    <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />-->
+<!--                </van-grid-item>-->
+
+                <van-grid-item v-for="item of imgList"  @click="showImg(buildSrc(item.__rowid))">
+                    <van-image :src="buildSrc(item.__rowid)" />
                 </van-grid-item>
-                <van-grid-item>
-                    <van-image :src="buildSrc()" />
-                </van-grid-item>
-                <van-grid-item>
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />
-                </van-grid-item>
-                <van-grid-item>
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-1.jpg" />
-                </van-grid-item>
-                <van-grid-item>
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-2.jpg" />
-                </van-grid-item>
-                <van-grid-item>
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />
-                </van-grid-item>
+
             </van-grid>
 
 
@@ -148,11 +150,12 @@
         methods : {
             onClickLeft() {
                 this.$router.go(-1);
+
             },
 
 
-            showImg(){
-                ImagePreview(['https://img01.yzcdn.cn/vant/apple-1.jpg']);
+            showImg(src){
+                ImagePreview([src]);
             },
 
 
@@ -169,9 +172,8 @@
             },
 
 
-            buildSrc (){
-
-                let url = `http://60.173.9.77:15280/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=img.Read&_rand=0.9726284176919381&rowid=${this.$route.query.rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=1135006016`;
+            buildSrc (rowid){
+                let url = `http://60.173.9.77:15280/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=${this.$route.query.checkid}`;
                 console.log('url',url);
                 return url
                 // return this.buildURL({

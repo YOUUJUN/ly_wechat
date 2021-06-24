@@ -150,7 +150,7 @@ class ADOAgent {
         if (columns) {
             columns.forEach((c1, index) => {
                 let column = new Column(c1.name, c1.dataType, c1.precision, c1.defaultValue);
-                this.batteryColumns.push(column);
+                this.columns.push(column);
                 this.colsIndex[column.name] = index;
                 this.colsIndex[c1.name] = index;
             })
@@ -465,7 +465,7 @@ class ADOAgent {
                     if (rowdata.__data[col] !== props[key]) {
                         rowdata.__data[col] = props[key];
                     }
-                    map[this.batteryColumns[col].name] = props[key];
+                    map[this.columns[col].name] = props[key];
                 }
             }
         }
@@ -595,11 +595,11 @@ class ADOAgent {
         }
         if (!this.rows.rangeCheck(row)) {
             throw new Error(`In AdoAgent:${this.name},setValueAt:row ${row} not exists !!!`);
-        } else if (!this.batteryColumns.rangeCheck(col)) {
+        } else if (!this.columns.rangeCheck(col)) {
             throw new Error(`In AdoAgent:${this.name},setValueAt:column ${col_name_index} not exists !!!`);
         } else {
             let rd = this.rows[row];
-            let cln = this.batteryColumns[col];
+            let cln = this.columns[col];
             let v1 = rd.__data[col];
             if (value) {
                 value = parseValue(value, cln.dataType, cln.precision);
@@ -652,7 +652,7 @@ class ADOAgent {
                 rs.__rownum = rd.__rownum;
                 rs.__status = rd.__status;
                 rs.__status2 = rd.__status2;
-                for (let [index, column] of this.batteryColumns.entries()) {
+                for (let [index, column] of this.columns.entries()) {
                     rs[column.name] = rd.__data[index];
 
                 }
@@ -761,7 +761,7 @@ class ADOAgent {
         return -1;
     };
 
-    getColumnName = (index) => this.batteryColumns.rangeCheck(index) ? this.batteryColumns[index].name : null;
+    getColumnName = (index) => this.columns.rangeCheck(index) ? this.columns[index].name : null;
 
 
     /**
@@ -773,7 +773,7 @@ class ADOAgent {
      */
     getColumn = (col_name) => {
         let i = isNaN(col_name) ? this.getColumnIndex(col_name) : col_name;
-        return this.batteryColumns.rangeCheck(i) ? this.batteryColumns[i] : null;
+        return this.columns.rangeCheck(i) ? this.columns[i] : null;
     };
 
     /**
@@ -781,7 +781,7 @@ class ADOAgent {
      *
      * @returns
      */
-    getColumnCount = () => this.batteryColumns.length;
+    getColumnCount = () => this.columns.length;
 
 
     /**
@@ -823,11 +823,11 @@ class ADOAgent {
      * @returns {RowData}
      */
     createDefaultRowData = (status, rowid) => {
-        let len = this.batteryColumns.length;
+        let len = this.columns.length;
         let rd = new RowData(len, status, rowid, this.colsIndex);
         for (let i = 0; i < len; i++) {
             // 获取默认值
-            rd.__data[i] = this.batteryColumns[i].defa;
+            rd.__data[i] = this.columns[i].defa;
         }
         return rd;
     };
@@ -1156,6 +1156,7 @@ class Engine {
     getEnv=(name)=>{
         return this.envs[name];
     }
+
     serialURL = (url, norand) => {
         if (fn.isPlainObject(url)) {
             url = fn.extend(url, {});

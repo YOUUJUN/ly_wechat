@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Home from './Register.vue'
 import store from '../../store/index'
+import Engine from './../../utils/engine_module.js';
+Vue.prototype.$Engine = Engine;
 
 import { NavBar, Form, Field, Button } from 'vant';
 Vue.use(NavBar);
