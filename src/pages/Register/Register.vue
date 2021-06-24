@@ -4,7 +4,7 @@
         <header>
 
             <van-nav-bar
-                    title="注册"
+                    title="车辆年检帮助服务"
                     left-text="返回"
                     left-arrow
                     @click-left="onClickLeft"
@@ -17,17 +17,18 @@
             <van-form @submit="onSubmit">
                 <van-field
                         v-model="username"
-                        name="昵称"
-                        label="昵称"
-                        placeholder="用户名"
-                        :rules="[{ required: true, message: '请填写用户名' }]"
+                        name="姓名"
+                        label="姓名"
+                        placeholder="请输入您的姓名"
                 />
                 <van-field
                         v-model="phone"
-                        required
-                        label="手机号"
-                        placeholder="请输入手机号"
-                        error-message="手机号格式错误"
+                        :rules="[
+                          { required: true, message: '请填写您的手机号码！' },
+                          { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}
+                        ]"
+                        type="tel"
+                        label="联系方式"
                 />
 
                 <van-field
@@ -36,6 +37,7 @@
                         clearable
                         label="短信验证码"
                         placeholder="请输入短信验证码"
+                        :rules="[{ required: true, message: '请输入短信验证码' }]"
                 >
                     <template #button>
                         <van-button size="small" type="primary">发送验证码</van-button>
@@ -43,7 +45,7 @@
                 </van-field>
 
                 <div style="margin: 16px;">
-                    <van-button round block type="info" native-type="submit">提交</van-button>
+                    <van-button round block type="info" native-type="submit">提交服务申请</van-button>
                 </div>
             </van-form>
 
@@ -61,13 +63,6 @@
 
     import { Toast } from 'vant';
 
-    // const page_static = {
-    //     model_name: 'wx_old_part_regist',
-    //     main_ado_name: 'wx_user',
-    //     save_act: 'Save',
-    //     add_act: 'Add',
-    // };
-
     const page_static = {
         model_name: 'clock_in_empl',
         main_ado_name: 'SARS_EMPL',
@@ -82,7 +77,7 @@
 
             return {
                 username: '',
-                password: '',
+                phone : '',
                 sms : '',
             }
 
@@ -96,7 +91,8 @@
         methods : {
 
             onClickLeft() {
-                Toast('返回');
+                document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+                WeixinJSBridge.call('closeWindow');
             },
 
             onSubmit(values) {

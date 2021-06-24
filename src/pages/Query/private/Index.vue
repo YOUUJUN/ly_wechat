@@ -46,19 +46,19 @@
                 >
                     <!--                    <van-cell title="物料：ABS泵" value="内容" label="详细信息" />-->
 
-                    <van-cell value="查看详情" is-link @click="goDetail">
-                        <template #title>
-                            <span class="custom-title" style="font-size: 15px">name</span>
-                            <!--                            <van-tag type="danger">标签</van-tag>-->
-                        </template>
+<!--                    <van-cell value="查看详情" is-link @click="goDetail">-->
+<!--                        <template #title>-->
+<!--                            <span class="custom-title" style="font-size: 15px">name</span>-->
+<!--                            &lt;!&ndash;                            <van-tag type="danger">标签</van-tag>&ndash;&gt;-->
+<!--                        </template>-->
 
-                        <template #label>
-                            <div class="custom-title">年款:</div>
-                            <div class="custom-title">品牌：</div>
-                            <div class="custom-title">系列：</div>
-                        </template>
+<!--                        <template #label>-->
+<!--                            <div class="custom-title">年款:</div>-->
+<!--                            <div class="custom-title">品牌：</div>-->
+<!--                            <div class="custom-title">系列：</div>-->
+<!--                        </template>-->
 
-                    </van-cell>
+<!--                    </van-cell>-->
 
 
                     <van-cell value="查看详情" is-link v-for="item of partList" @click="goDetail(item.__rowid)">
@@ -81,7 +81,7 @@
 
                 </van-list>
 
-                <router-link :to="generateUrl()" @click="goDetail">项目地址</router-link>
+<!--                <router-link :to="generateUrl()" @click="goDetail">项目地址</router-link>-->
             </van-pull-refresh>
 
 
@@ -153,8 +153,6 @@
                 year : '',
                 part : '',
 
-
-                list: [1,2,3,4,5,6,7,8],
                 loading: false,
                 finished: true,
                 refreshing: false,
@@ -291,6 +289,9 @@
                 }).then(res => {
                     console.log('res',res);
                     console.log('---------->list',vm.partList);
+                    if(vm.partList.length == 0){
+                        Toast('仓库没有找到该车型的零部件.');
+                    }
                     vm.finishedText = "没有更多了"
                 }).catch(err => {
                     console.log('err',err);
@@ -307,7 +308,12 @@
                     console.log('res',res);
                     vm.$router.push({
                         name: 'detail',
-                        params: { $e: this.$e }
+                        // params: { $e: this.$e },
+                        query: {
+                            amgn : this.$e._amgn,
+                            checkid : this.$e._checkid,
+                            rowid : rowid
+                        }
                     });
                 }).catch(err => {
                     console.log('err',err);
@@ -317,7 +323,10 @@
             generateUrl (){
                 return {
                     name: 'detail',
-                    params: { $e: this.$e }
+                    query: {
+                        amgn : this.$e._amgn,
+                        checkid : this.$e._checkid
+                    }
                 };
             }
 

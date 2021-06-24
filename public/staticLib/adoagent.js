@@ -46,13 +46,13 @@ var ado_status = {
 
         init: function (props) {
             // 创建结构
-            var cls = props.columns;
+            var cls = props.batteryColumns;
             if (cls) {
                 var column;
                 for (var j = 0; j < cls.length; j++) {
                     column = new Column(cls[j].name, cls[j].dataType,
                         cls[j].precision, cls[j].defaultValue);
-                    this.columns.push(column);
+                    this.batteryColumns.push(column);
                     this.colsIndex[column.name] = j;
                     this.colsIndex[cls[j].name] = j;
                 }
@@ -408,8 +408,8 @@ var ado_status = {
                     rs.__rownum = rd.__rownum;
                     rs.__status = rd.__status;
                     rs.__status2 = rd.__status2;
-                    for (var j = 0; j < this.columns.length; j++) {
-                        rs[this.columns[j].name] = rd.__data[j];
+                    for (var j = 0; j < this.batteryColumns.length; j++) {
+                        rs[this.batteryColumns[j].name] = rd.__data[j];
                     }
                 }
             }
@@ -560,13 +560,13 @@ var ado_status = {
             if (!this.rows.rangeCheck(row)) {
                 throw new Error("In AdoAgent:" + this.name + ",setValueAt:row "
                     + row + " not exists !!!");
-            } else if (!this.columns.rangeCheck(col)) {
+            } else if (!this.batteryColumns.rangeCheck(col)) {
                 throw new Error("In AdoAgent:" + this.name
                     + ",setValueAt:column " + col_name_index
                     + " not exists !!!");
             } else {
                 var rd = this.rows[row];
-                var cln = this.columns[col];
+                var cln = this.batteryColumns[col];
                 var v1 = rd.__data[col];
                 if (value) {
                     value = $e.fn
@@ -723,7 +723,7 @@ var ado_status = {
                 }
             }
             if ((arguments.length >= 4) && (col >= 0)) {
-                eo.columnName = this.columns[col].name.toLowerCase();
+                eo.columnName = this.batteryColumns[col].name.toLowerCase();
             }
             return eo;
         },
@@ -775,7 +775,7 @@ var ado_status = {
         },
 
         getColumnName: function (index) {
-            return this.columns.rangeCheck(index) ? this.columns[index].name
+            return this.batteryColumns.rangeCheck(index) ? this.batteryColumns[index].name
                 : null;
         },
 
@@ -788,7 +788,7 @@ var ado_status = {
          */
         getColumn: function (col_name) {
             var i = isNaN(col_name) ? this.getColumnIndex(col_name) : col_name;
-            return this.columns.rangeCheck(i) ? this.columns[i] : null;
+            return this.batteryColumns.rangeCheck(i) ? this.batteryColumns[i] : null;
         },
 
         /**
@@ -797,7 +797,7 @@ var ado_status = {
          * @returns
          */
         getColumnCount: function () {
-            return this.columns.length;
+            return this.batteryColumns.length;
         },
 
         /**
@@ -836,11 +836,11 @@ var ado_status = {
          * @returns {RowData}
          */
         createDefaultRowData: function (status, rowid) {
-            var len = this.columns.length;
+            var len = this.batteryColumns.length;
             var rd = new RowData(len, status, rowid, this.colsIndex);
             for (var i = 0; i < len; i++) {
                 // 获取默认值
-                rd.__data[i] = this.columns[i].defa;
+                rd.__data[i] = this.batteryColumns[i].defa;
             }
             return rd;
         },

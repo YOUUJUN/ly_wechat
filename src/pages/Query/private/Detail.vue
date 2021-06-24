@@ -15,7 +15,7 @@
 
         <main>
 
-            <van-form @submit="onSubmit">
+            <van-form @submit="onSubmit" v-if="dataList.length > 0">
                 <h2 class="title">物料信息</h2>
                 <van-field name="radio" label="物料名称">
                     <template #input>
@@ -47,7 +47,7 @@
                     <van-image src="https://img01.yzcdn.cn/vant/apple-1.jpg" />
                 </van-grid-item>
                 <van-grid-item>
-                    <van-image src="https://img01.yzcdn.cn/vant/apple-2.jpg" />
+                    <van-image :src="buildSrc()" />
                 </van-grid-item>
                 <van-grid-item>
                     <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />
@@ -62,6 +62,10 @@
                     <van-image src="https://img01.yzcdn.cn/vant/apple-3.jpg" />
                 </van-grid-item>
             </van-grid>
+
+
+            <h2 class="title" style="text-align: center">如有意向购买，请联系：111555111</h2>
+
 
 
 
@@ -111,11 +115,15 @@
         },
 
         beforeCreate(){
-            let e = this.$route.params.$e;
-            console.log('e-------->',e);
+            console.log('query=====>',this.$route.query);
+            // let e = this.$route.params.$e;
+            let amgn = this.$route.query.amgn;
+            let checkid = this.$route.query.checkid;
+            this.__rowid = this.$route.query.rowid;
             this.$e=new Engine();
-            this.$e._amgn=e._amgn;
-            this.$e._checkid=e._checkid;
+            this.$e._amgn=amgn;
+            this.$e._checkid=checkid;
+            console.log("this.$e ===>",this.$e);
         },
 
         created () {
@@ -158,6 +166,28 @@
                     console.log("err ============>",err);
                     console.log("this.brandsList ===>",this.brandsList);
                 });
+            },
+
+
+            buildSrc (){
+
+                let url = `http://60.173.9.77:15280/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=img.Read&_rand=0.9726284176919381&rowid=${this.$route.query.rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=1135006016`;
+                console.log('url',url);
+                return url
+                // return this.buildURL({
+                //     rowid: rowid
+                // })
+            },
+
+            buildURL (op) {
+                let options = {
+                    _amn: "wx_old_part_buy_bill",
+                    _mn: "wx_old_part_buy_bill",
+                    _name: "image.Read"
+                };
+                let randk = 'r'+op.rowid + '';
+                this.$e.fn.extend(op, options, true);
+                return this.$e.getURL("async", options, false, true);
             }
         }
     }
