@@ -22,10 +22,24 @@
 
                     <van-field
                             v-model="price"
-                            name="三钢上月包块均价(元/公斤)"
-                            label="三钢上月包块均价(元/公斤)"
+                            name="废铁收购价"
+                            label="废铁收购价"
                             label-width="120"
-                    />
+                            left-icon="question-o"
+                    >
+                        <template #left-icon>
+
+                            <van-popover v-model="showPopover1" trigger="click" placement="bottom-start" theme="dark">
+                                <div class="pop-panel">近期钢铁厂收购废铁的大致价格</div>
+                                <template #reference>
+                                    <van-icon name="question-o" />
+                                </template>
+
+                            </van-popover>
+
+                        </template>
+
+                    </van-field>
 
                     <van-field
                             v-model="weight"
@@ -34,21 +48,60 @@
                             label-width="120"
                             placeholder="输入车辆整备质量"
                             :rules="[{ required: true, message: '请输入车辆整备质量' }]"
-                    />
+                    >
+                        <template #left-icon>
+
+                            <van-popover v-model="showPopover2" trigger="click" placement="bottom-start" theme="dark">
+                                <div class="pop-panel">请查阅车辆行驶证副页上的“整备质量”</div>
+                                <template #reference>
+                                    <van-icon name="question-o" />
+                                </template>
+
+                            </van-popover>
+
+                        </template>
+
+                    </van-field>
 
                     <van-field
                             v-model="impurity"
-                            name="扣杂率(20%)"
-                            label="扣杂率(20%)"
+                            name="扣杂率"
+                            label="扣杂率"
                             label-width="120"
-                    />
+                    >
+                        <template #left-icon>
+
+                            <van-popover v-model="showPopover3" trigger="click" placement="bottom-start" theme="dark">
+                                <div class="pop-panel">车辆废铁之外的重量</div>
+                                <template #reference>
+                                    <van-icon name="question-o" />
+                                </template>
+
+                            </van-popover>
+
+                        </template>
+
+                    </van-field>
 
                     <van-field
                             v-model="serviceFee"
-                            name="服务费率(15%)"
-                            label="服务费率(15%)"
+                            name="服务费率"
+                            label="服务费率"
                             label-width="120"
-                    />
+                    >
+                        <template #left-icon>
+
+                            <van-popover v-model="showPopover4" trigger="click" placement="bottom-start" theme="dark">
+                                <div class="pop-panel">即收购点收购车辆、办理手续等服务的费率</div>
+                                <template #reference>
+                                    <van-icon name="question-o" />
+                                </template>
+
+                            </van-popover>
+
+                        </template>
+
+                    </van-field>
 
                     <van-field
                             v-model="distance"
@@ -58,7 +111,20 @@
                             type="number"
                             placeholder="请输入距离，自送输0"
                             :rules="[{ required: true, message: '请输入距离，自送输0' }]"
-                    />
+                    >
+                        <template #left-icon>
+
+                            <van-popover v-model="showPopover5" trigger="click" placement="bottom-start" theme="dark">
+                                <div class="pop-panel">车辆停放处距离所选择的门店的记录，参考高德、百度、腾讯等地图。若选择自己开车到最近门店，则距离填0。</div>
+                                <template #reference>
+                                    <van-icon name="question-o" />
+                                </template>
+
+                            </van-popover>
+
+                        </template>
+
+                    </van-field>
 
                     <van-field
                             readonly
@@ -112,7 +178,7 @@
 
             <van-popup v-model="showResult" :round="true">
                 <div class="result-panel">
-                    <div>您的老旧车价值：</div>
+                    <div>您的车子残值预计：</div>
                     <div style="text-align: center;color:red;margin-top:8px;">{{result}}元</div>
                 </div>
             </van-popup>
@@ -152,10 +218,9 @@
     // };
 
     const page_static = {
-        model_name: 'clock_in_empl',
-        main_ado_name: 'SARS_EMPL',
-        save_act: 'Regist',
-        add_act: 'Add',
+        groupName: 'wx_car_access',
+        model_name: 'wx_car_access',
+        main_ado_name: 'data_m',
     };
 
     export default {
@@ -164,9 +229,6 @@
         data() {
 
             return {
-                username: '',
-                password: '',
-                sms : '',
                 ifBattery : '',
                 ifTWC : '',
                 distance : '',
@@ -174,6 +236,11 @@
                 impurity : '20%',
                 weight : '',
                 price : 300,
+
+                sych_price : '',
+                xdc_price : '',
+
+                dataList : [],
 
 
                 batteryColumns: ['完整', '缺失'],
@@ -183,19 +250,67 @@
                 showResult : false,
 
                 result : '',
+
+
+                showPopover1 : false,
+                showPopover2 : false,
+                showPopover3 : false,
+                showPopover4 : false,
+                showPopover5 : false,
+                actions: [{ text: '选项一' }, { text: '选项二' }, { text: '选项三' }],
             }
 
         },
 
+        beforeCreate(){
+            this.$e = new this.$Engine();
+        },
+
+        watch:{
+            dataList (newData, oldData){
+                newData = newData[0];
+                this.impurity_num = newData.impurity;
+                this.cover_price_num = newData.cover_price;
+
+                this.impurity = this.toPercent(newData.impurity);
+                this.serviceFee = this.toPercent(newData.cover_price);
+
+                this.max_distance = newData.traffic_distince;
+                this.extraPrice = newData.km_price;
+
+                this.price = newData.fg_price;
+                this.sych_price = newData.sych_price;
+                this.xdc_price = newData.xdc_price;
+            }
+        },
+
         created(){
-            console.log("$e",$e);
+            let adapter = this.$e.getActiveModule(page_static.model_name, true).createAdapter(this, true);
+            adapter.mappingData(page_static.main_ado_name, "dataList");
+
+            let vm = this;
+            this.$e.init(page_static.groupName, page_static.model_name, null, {
+                _act: '',
+            }).then(function (res) {
+                console.log('res',res);
+                console.log("this.dataList ===>",vm.dataList);
+            }).catch(err =>{
+                console.log("err ============>",err);
+
+            });
         },
 
 
         methods : {
+            toPercent(point){
+                var str=Number(point*100).toFixed(1);
+                str+="%";
+                return str;
+            },
 
             onClickLeft() {
-                Toast('返回');
+                document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+                WeixinJSBridge.call('closeWindow');
             },
 
             onSubmit(values) {
@@ -222,11 +337,29 @@
 
             doCalc(){
                 // 整备质量*三钢上月包块均价*(1-扣杂率)*（1-服务费率）-运费-完整率扣款
-                let carriage = 20;
-                let Debit = 10;
+                let carriage = 300;
 
-                let result = this.weight * this.price * (1 - 0.15) * (1 - 0.2) - carriage - Debit;
-                this.result = result;
+                if(this.distance > this.max_distance){
+                    let extra = (this.distance - this.max_distance) * this.extraPrice;
+                    carriage += extra;
+                }
+
+                console.log('carriage===>',carriage);
+
+                let Debit = 0;
+                if(this.ifTWC === '缺失'){
+                    Debit += this.sych_price;
+                }
+
+                if(this.ifBattery === '缺失'){
+                    Debit += this.xdc_price;
+                }
+
+                console.log('Debit==>',Debit);
+
+
+                let result = this.weight * this.price * (1 - this.impurity_num) * (1 - this.cover_price_num) - carriage - Debit;
+                this.result = parseInt(result);
                 // Toast(result);
                 this.showResult = true;
             }
@@ -238,6 +371,11 @@
 
     body{
         background-color: #f7f8fa;
+    }
+
+    .van-icon{
+        color: #e67e22;
+        cursor : pointer;
     }
 
 </style>
@@ -271,6 +409,12 @@
     .result-panel{
         padding:20px;
 
+    }
+
+    .pop-panel{
+        padding: 6px 8px;
+        max-width: 260px;
+        font-size: 14px;
     }
 
 </style>

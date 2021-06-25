@@ -11,7 +11,8 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    component: QueryIndex
+    component: QueryIndex,
+    meta: { keepAlive: true }
   },
 
   {

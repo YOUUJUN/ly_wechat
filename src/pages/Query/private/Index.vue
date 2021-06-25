@@ -14,35 +14,37 @@
 
         <main>
 
-            <van-cell-group class="panel">
-                <div class="panel-body">
+            <keep-alive>
+                <van-cell-group class="panel">
+                    <div class="panel-body">
 
-                    <van-field label="车辆品牌系列" placeholder="请选择品牌系列" :value="brandSeries" readonly @click="openChoiceBrand()"/>
-                    <!--                <van-field v-model="brand" label="车辆品牌系列" placeholder="请选择品牌系列" />-->
-                    <van-field v-model="year" label="年款" placeholder="请输入年款" />
+                        <van-field label="车辆品牌系列" placeholder="请选择品牌系列" :value="brandSeries" readonly @click="openChoiceBrand()"/>
+                        <!--                <van-field v-model="brand" label="车辆品牌系列" placeholder="请选择品牌系列" />-->
+                        <van-field v-model="year" label="年款" placeholder="请输入年款" />
 
-                    <van-field
-                            v-model="part"
-                            center
-                            clearable
-                            label="旧件名称"
-                            placeholder="请输入旧件名称"
-                    >
-                        <template #button>
-                            <van-button size="small" type="primary" @click="search">搜索</van-button>
-                        </template>
-                    </van-field>
+                        <van-field
+                                v-model="part"
+                                center
+                                clearable
+                                label="旧件名称"
+                                placeholder="请输入旧件名称"
+                        >
+                            <template #button>
+                                <van-button size="small" type="primary" @click="search">搜索</van-button>
+                            </template>
+                        </van-field>
 
-                </div>
-            </van-cell-group>
+                    </div>
+                </van-cell-group>
+            </keep-alive>
 
 
-            <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+
+<!--            <van-pull-refresh v-model="refreshing" @refresh="onRefresh">-->
                 <van-list
                         v-model="loading"
                         :finished="finished"
                         :finished-text="finishedText"
-                        @load="onLoad"
                 >
                     <!--                    <van-cell title="物料：ABS泵" value="内容" label="详细信息" />-->
 
@@ -81,12 +83,12 @@
                 </van-list>
 
 <!--                <router-link :to="generateUrl()" @click="goDetail">项目地址</router-link>-->
-            </van-pull-refresh>
+<!--            </van-pull-refresh>-->
 
 
             <van-popup v-model="show" position="right" :style="{ height: '100%', width : '70%' }">
 
-                <van-index-bar>
+                <van-index-bar :sticky="false"  :style="{ height: '100%', overflow : 'auto'}">
 
                     <template v-for="(item, index) in Object.entries(getIndexList)" >
                         <van-index-anchor :index="item[0]" :key="index">{{ item[0] }}</van-index-anchor>
@@ -332,6 +334,11 @@
                         checkid : this.$e._checkid
                     }
                 };
+            },
+
+            onClickLeft(){
+                document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+                WeixinJSBridge.call('closeWindow');
             }
 
         }

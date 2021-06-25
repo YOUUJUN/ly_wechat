@@ -79,8 +79,17 @@
         },
 
         beforeCreate(){
-          this.$e = new this.$Engine();
-          this.$e._amgn = page_static.model_name;
+            this.$e = new this.$Engine();
+            this.$e._amgn = page_static.model_name;
+
+            let is_ok = localStorage.getItem("is_ok");
+            let phone = localStorage.getItem("phone");
+            console.log('is_ok---->from beforeCreate',is_ok);
+            console.log('phone---->from beforeCreate',phone);
+            if(is_ok == 1){
+                console.log(`----let's go-----`);
+                window.open('/old_part/Query.html','_self');
+            }
         },
 
 
@@ -103,8 +112,13 @@
                         verifycode : this.sms
                     }
                 }).then(res => {
+                    console.log('res===>',res);
+                    console.log('res.data.envs.is_ok===>',res.envs.is_ok);
+                    localStorage.setItem("is_ok",res.envs.is_ok);
+                    localStorage.setItem("phone",this.phone);
                     window.open('/old_part/Query.html','_self');
                 }).catch(err => {
+                    console.log('err===>00',err);
                     Toast('验证码验证失败!');
                 });
             },

@@ -173,12 +173,9 @@
 
 
             buildSrc (rowid){
-                let url = `http://60.173.9.77:15280/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=${this.$route.query.checkid}`;
+                let url = `/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=${this.$route.query.checkid}`;
                 console.log('url',url);
-                return url
-                // return this.buildURL({
-                //     rowid: rowid
-                // })
+                return url;
             },
 
             buildURL (op) {
