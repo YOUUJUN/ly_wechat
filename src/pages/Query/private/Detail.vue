@@ -66,7 +66,7 @@
             </van-grid>
 
 
-            <h2 class="title" style="text-align: center">如有意向购买，请联系：111555111</h2>
+            <h2 class="title" style="text-align: center">如有意向购买，请联系：0597-5663661</h2>
 
 
 

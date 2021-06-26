@@ -14,54 +14,36 @@
 
         <main>
 
-            <keep-alive>
-                <van-cell-group class="panel">
-                    <div class="panel-body">
+            <van-cell-group class="panel">
+                <div class="panel-body">
 
-                        <van-field label="车辆品牌系列" placeholder="请选择品牌系列" :value="brandSeries" readonly @click="openChoiceBrand()"/>
+                    <van-field label="车辆品牌系列" placeholder="请选择品牌系列" :value="brandSeries" readonly @click="openChoiceBrand()"/>
 
 <!--                        <van-field v-model="year" label="年款" placeholder="请输入年款" />-->
 
-                        <van-field
-                                v-model="part"
-                                center
-                                clearable
-                                label="旧件名称"
-                                placeholder="请输入旧件名称"
-                        >
-                            <template #button>
-                                <van-button size="small" type="primary" @click="search">搜索</van-button>
-                            </template>
-                        </van-field>
+                    <van-field
+                            v-model="part"
+                            center
+                            clearable
+                            label="旧件名称"
+                            placeholder="请输入旧件名称"
+                    >
+                        <template #button>
+                            <van-button size="small" type="primary" @click="search">搜索</van-button>
+                        </template>
+                    </van-field>
 
-                    </div>
-                </van-cell-group>
-            </keep-alive>
-
+                </div>
+            </van-cell-group>
 
 
-<!--            <van-pull-refresh v-model="refreshing" @refresh="onRefresh">-->
                 <van-list
                         v-model="loading"
                         :finished="finished"
-                        :finished-text="finishedText"
+                        finished-text="没有更多了"
                         @load="onLoad"
                 >
-                    <!--                    <van-cell title="物料：ABS泵" value="内容" label="详细信息" />-->
 
-                    <!--                    <van-cell value="查看详情" is-link @click="goDetail">-->
-                    <!--                        <template #title>-->
-                    <!--                            <span class="custom-title" style="font-size: 15px">name</span>-->
-                    <!--                            &lt;!&ndash;                            <van-tag type="danger">标签</van-tag>&ndash;&gt;-->
-                    <!--                        </template>-->
-
-                    <!--                        <template #label>-->
-                    <!--                            <div class="custom-title">年款:</div>-->
-                    <!--                            <div class="custom-title">品牌：</div>-->
-                    <!--                            <div class="custom-title">系列：</div>-->
-                    <!--                        </template>-->
-
-                    <!--                    </van-cell>-->
 
                     <van-cell value="查看详情" is-link v-for="item of partList" @click="goDetail(item.__rowid)">
                         <template #title>
@@ -78,13 +60,19 @@
                     </van-cell>
 
 
-                    <!--                    <van-cell v-for="item in list" :key="item" :title="item" />-->
-
 
                 </van-list>
 
-<!--                <router-link :to="generateUrl()" @click="goDetail">项目地址</router-link>-->
-<!--            </van-pull-refresh>-->
+
+<!--            <van-list-->
+<!--                    v-model="loading"-->
+<!--                    :finished="finished"-->
+<!--                    finished-text="没有更多了"-->
+<!--                    @load="onLoad"-->
+<!--            >-->
+<!--                <van-cell v-for="item in list" :key="item" :title="item" />-->
+<!--            </van-list>-->
+
 
 
             <van-popup v-model="show" position="right" :style="{ height: '100%', width : '70%' }">
@@ -153,10 +141,10 @@
                 year : '',
                 part : '',
 
+                list: [],
                 loading: false,
-                finished: true,
-                refreshing: false,
-                finishedText : '点击搜索按钮，搜索零部件信息',
+                finished: false,
+
 
                 show : false,
                 showBottom : false,
@@ -173,6 +161,11 @@
         },
 
         beforeCreate(){
+            if (!this.__count){
+                this.__count=0;
+            }
+            this.__count++;
+            console.log('ado==>in get in before __count:'+this.__count);
             if(!this.$e){
                 this.$e = new this.$Engine();
             }
@@ -225,9 +218,44 @@
 
         methods : {
 
-            onLoad : function(){
+            // onLoad() {
+            //     console.log('onloading---->');
+            //
+            //     // 异步更新数据
+            //     // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+            //     setTimeout(() => {
+            //         console.log('onloading---->2');
+            //         for (let i = 0; i < 10; i++) {
+            //             this.list.push(this.list.length + 1);
+            //         }
+            //
+            //         // 加载状态结束
+            //         this.loading = false;
+            //
+            //         // 数据全部加载完成
+            //         if (this.list.length >= 40) {
+            //             this.finished = true;
+            //         }
+            //     }, 1000);
+            // },
 
+            onLoad : function(){
+                let vm = this;
+
+                vm.loading = false;
+                let ado = this.$e.getADO(page_static.comp_ado_name,page_static.moduleName);
+                if(ado){
+                    ado.nextPage().then(res => {
+                        console.log('onloading---->2');
+                        vm.loading = false;
+
+                        if(!ado.hasNextPage()){
+                            vm.finished = true;
+                        }
+                    });
+                }
             },
+
 
             openChoiceBrand(){
                 this.show = true;
@@ -303,7 +331,7 @@
                     if(vm.partList.length == 0){
                         Toast('仓库没有找到该车型的零部件.');
                     }
-                    vm.finishedText = "没有更多了"
+                    // vm.finishedText = "没有更多了"
                 }).catch(err => {
                     console.log('err',err);
                 })

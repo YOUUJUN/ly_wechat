@@ -181,11 +181,13 @@ class ADOAgent {
                 vars: vars,
                 clear: false
             };
-
+console.log("ado============1:",addType+"/"+this.getName());
             switch (addType) {
                 case 'refresh':
                     // 刷新,清空数据
+                    console.log("ado====1========1:",this.pageLoadReset);
                     if (page <= 0 || this.pageLoadReset) {
+                        console.log("ado====1========2 page:",page+"/"+this.pageLoadReset);
                         this.reset(true);
                         this.reflectData.clear = true;
                     }
@@ -216,6 +218,7 @@ class ADOAgent {
                     let map = {};
                     switch (addType) {
                         case 'refresh':
+                            console.log("ado============2:"+addType);
 
                             // 初始加载
                             if (!this.pageLoadReset && rowid <= this.maxRowID) {
@@ -281,6 +284,9 @@ class ADOAgent {
                     }
 
                 });
+                console.log("ado============10 reflectData:",this.reflectData);
+                console.log("ado============20 rowsData:",rowsData);
+
             }
 
             this.isEdit = isEdit;
@@ -1040,12 +1046,25 @@ class ADOAgent {
             options.params = options.params || {};
             options.params._name = this.getName();
             options.params.page = page;
-            this.engine.pageCall(this.getActiveModuleName(), options);
+            //this.engine.pageCall(this.getActiveModuleName(), options);
 
-            return true;
-        }
-        return false;
+            return new Promise((resolve, reject) => {
+                this.engine.request(this.getActiveModuleName(), "pagedata", '', null, null, options, resolve, reject);  // , null, null, options
+            });
+       }
+
+        return new Promise.resolve('');
+       //return false;
     };
+
+
+    // pageCall = (amn, options) => {
+    //     console.log('ado==>in2',this);
+    //     console.log('ado==>in3',this._checkid);
+    //     return new Promise((resolve, reject) => {
+    //         this.request(amn, "pagedata", '', null, null, options, resolve, reject);  // , null, null, options
+    //     });
+    // }
 
     hasNextPage = () => {
         let pg = this.getDataPage();
@@ -1057,7 +1076,7 @@ class ADOAgent {
         if (pg.getCurrentPage() < pg.getPageCount() - 1) {
             return this.toPage(pg.getCurrentPage() + 1, options);
         }
-        return false;
+        return new Promise.resolve('');
     };
 
     release = () => {
@@ -1231,11 +1250,7 @@ class Engine {
         });
     }
 
-    pageCall = (amn, options) => {
-        return new Promise((resolve, reject) => {
-            this.request(amn, "pagedata", '', null, null, options, resolve, reject);  // , null, null, options
-        });
-    }
+
 
     selfCall = (amn, name, ados, jsondata, options) => {
         return new Promise((resolve, reject) => {
@@ -1348,7 +1363,6 @@ class Engine {
             var ds = '';
             // data,初始是reload
             var data = cells['data'];
-            console.log('---------------------------------loadData:---------100');
             if (data && data.length > 0) {
                 // 一个或多个ADOAgent的数据
                 ds = [];
@@ -1373,7 +1387,6 @@ class Engine {
                     }
                 }
             }
-            console.log('---------------------------------loadData:---------110');
             if (ds) {
                 let adapter = null, am;
                 for (let i = 0; i < ds.length; i++) {
@@ -1383,21 +1396,16 @@ class Engine {
                     if (!adapter) {
                         adapter = this.getAdapter(ds[i].getActiveModuleName());
                     }
-                    console.log('---------------------------------loadData:---------111');
 
                     if (adapter) {
-                        console.log('---------------------------------loadData:---------112');
                         adapter.outData(ds[i], true);
                     }
-                    console.log('---------------------------------loadData:---------113');
                 }
             }
-            console.log('---------------------------------loadData:---------120');
             if (envs && !fn.isEmptyObject(envs)) {
                 fn.extend(envs, this.envs, true, true);
             }
             let ld = cells["view_or"];
-            console.log('---------------------------------loadData:---------130');
             if (ld) {
                 let viewData=null,apapter=null;
                 for (amn in ld) {
@@ -1809,13 +1817,13 @@ class Adapter {
      * @param isclear
      */
     outData(ado, isclear) {
-        console.log('--------outData-----', ado)
+        console.log('--------outData-----', ado.getName())
 
 
         //必须事先已经建立映射关系
         let data = ado.getReflectData();
         if (data) {
-            console.log('ado=====>',ado);
+            console.log('ado=====getReflectData>',data);
             let name = ado.getName();
             console.log('vue=======>',this.vue);
             console.log('name1=====>',name);
@@ -1823,15 +1831,17 @@ class Adapter {
             let rows0 = this.vue.$data[this[name]['rows']];
             console.log('get in to refresh ===========>refresh', data.type);
             if (data.type == 'refresh') {
-                console.log('get in to refresh ===========>',data.rows);
+                console.log('get in to refresh ===========outData> 0:',rows0.length);
+                console.log('get in to refresh ===========outData> 1:',data.rows.length);
                 if (!!data.clear) {
-                    console.log('get in to refresh ===========>2',rows0);
+                    console.log('get in to refresh ===========outData> 2:',rows0);
                     rows0.splice(0, rows0.length);
                 }
+                console.log('get in to refresh ===========outData> 3:',data.rows);
                 data.rows.forEach((item) => {
                     rows0.push(item)
                 })
-                this.vue.__hello = 1;
+                console.log('get in to refresh ===========outData> last:',rows0.length);
 
                 console.log('get in to refresh ===========>rows0', rows0);
 

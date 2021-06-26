@@ -4,7 +4,7 @@
         <header>
 
             <van-nav-bar
-                    title="旧车回收价格查询"
+                    title="旧车回收价格预估"
                     left-text="返回"
                     left-arrow
                     @click-left="onClickLeft"
@@ -15,6 +15,7 @@
         <main>
 
             <h2 class="title">我的报废车值多少钱?</h2>
+            <p class="sup-title">限小车，供参考</p>
 
             <van-form @submit="onSubmit" class="panel">
 
@@ -22,8 +23,8 @@
 
                     <van-field
                             v-model="price"
-                            name="废铁收购价"
-                            label="废铁收购价"
+                            name="废铁收购价(元/吨)"
+                            label="废铁收购价(元/吨)"
                             label-width="120"
                             left-icon="question-o"
                     >
@@ -186,13 +187,14 @@
 
             <div class="alert">
 
-                <p>1.三钢上月包块均价指的是：三个月三明三钢废铁包块的均价,取平均值</p>
-                <p>2.车辆整备质量：请查阅车辆行驶证副页上的“整备质量”</p>
-                <p>3.扣杂率：即车辆废铁之外的重量</p>
-                <p>4.服务费率：即收购点收购车辆、办理手续等服务的费率</p>
-                <p>5.距离最近门店的距离：车辆停放处距离所选择的门店的记录，参考高德、百度、腾讯等地图。若选择自己开车到最近门店，则距离填0。</p>
-                <p>6.三元催化是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
-                <p>7.电瓶是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
+                <p>1.计算公式:即车辆回收价格预估:废铁收购价（元/公斤）*车辆整备质量（公斤）*（1-扣杂率）*（1-服务费率）-拖车费-三元催化及电瓶扣款</p>
+                <p>2.废铁收购价：近期钢铁厂收购废铁的大致价格</p>
+                <p>3.车辆整备质量：请查阅车辆行驶证副页上的“整备质量”</p>
+                <p>4.扣杂率：即车辆废铁之外的重量</p>
+                <p>5.服务费率：即收购点收购车辆、办理手续等服务的费率</p>
+                <p>6.距离最近门店的距离：车辆停放处距离所选择的门店的记录，参考高德、百度、腾讯等地图。若选择自己开车到最近门店，则距离填0。</p>
+                <p>7.三元催化是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
+                <p>8.电瓶是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
 
             </div>
 
@@ -358,7 +360,7 @@
                 console.log('Debit==>',Debit);
 
 
-                let result = this.weight * this.price * (1 - this.impurity_num) * (1 - this.cover_price_num) - carriage - Debit;
+                let result = (this.weight / 1000) * this.price * (1 - this.impurity_num) * (1 - this.cover_price_num) - carriage - Debit;
                 this.result = parseInt(result);
                 // Toast(result);
                 this.showResult = true;
@@ -385,6 +387,14 @@
     .title{
         text-align: center;
         font-size: 19px;
+        margin-bottom: 4px;
+    }
+
+    .sup-title{
+        font-size: 14px;
+        text-align: center;
+        margin: 0 0 6px 0;
+        color: rgba(0,0,0,0.6);
     }
 
     .panel {
