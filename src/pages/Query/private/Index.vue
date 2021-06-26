@@ -19,8 +19,8 @@
                     <div class="panel-body">
 
                         <van-field label="车辆品牌系列" placeholder="请选择品牌系列" :value="brandSeries" readonly @click="openChoiceBrand()"/>
-                        <!--                <van-field v-model="brand" label="车辆品牌系列" placeholder="请选择品牌系列" />-->
-                        <van-field v-model="year" label="年款" placeholder="请输入年款" />
+
+<!--                        <van-field v-model="year" label="年款" placeholder="请输入年款" />-->
 
                         <van-field
                                 v-model="part"
@@ -45,6 +45,7 @@
                         v-model="loading"
                         :finished="finished"
                         :finished-text="finishedText"
+                        @load="onLoad"
                 >
                     <!--                    <van-cell title="物料：ABS泵" value="内容" label="详细信息" />-->
 
@@ -189,9 +190,9 @@
                 this.getBrandsData();
             }
 
-            this.$bus.$on('ok',(res)=>{
-                this.search();
-            })
+            // this.$bus.$on('ok',(res)=>{
+            //     this.search();
+            // })
         },
 
         computed : {
@@ -223,6 +224,10 @@
 
 
         methods : {
+
+            onLoad : function(){
+
+            },
 
             openChoiceBrand(){
                 this.show = true;
