@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Home from './Detail.vue'
+import Home from './Entire.vue'
 import store from '../../store/index'
 import Engine from './../../utils/engine_module.js';
 Vue.prototype.$Engine = Engine;

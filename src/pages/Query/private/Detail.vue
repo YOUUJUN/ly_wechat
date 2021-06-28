@@ -88,8 +88,6 @@
 
 <script>
     import { ImagePreview } from 'vant';
-    import Engine from "../../../utils/engine_module";
-
 
     const detail_module = {
         moduleName: 'wx_old_part_buy_bill',
@@ -117,12 +115,11 @@
         },
 
         beforeCreate(){
-            console.log('query=====>',this.$route.query);
             // let e = this.$route.params.$e;
             let amgn = this.$route.query.amgn;
             let checkid = this.$route.query.checkid;
             this.__rowid = this.$route.query.rowid;
-            this.$e=new Engine();
+            this.$e=new this.$Engine();
             this.$e._amgn=amgn;
             this.$e._checkid=checkid;
             console.log("this.$e ===>",this.$e);
