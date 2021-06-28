@@ -181,13 +181,10 @@ class ADOAgent {
                 vars: vars,
                 clear: false
             };
-console.log("ado============1:",addType+"/"+this.getName());
             switch (addType) {
                 case 'refresh':
                     // 刷新,清空数据
-                    console.log("ado====1========1:",this.pageLoadReset);
                     if (page <= 0 || this.pageLoadReset) {
-                        console.log("ado====1========2 page:",page+"/"+this.pageLoadReset);
                         this.reset(true);
                         this.reflectData.clear = true;
                     }
@@ -218,7 +215,6 @@ console.log("ado============1:",addType+"/"+this.getName());
                     let map = {};
                     switch (addType) {
                         case 'refresh':
-                            console.log("ado============2:"+addType);
 
                             // 初始加载
                             if (!this.pageLoadReset && rowid <= this.maxRowID) {
@@ -284,8 +280,6 @@ console.log("ado============1:",addType+"/"+this.getName());
                     }
 
                 });
-                console.log("ado============10 reflectData:",this.reflectData);
-                console.log("ado============20 rowsData:",rowsData);
 
             }
 
@@ -440,10 +434,7 @@ console.log("ado============1:",addType+"/"+this.getName());
     buildRowNum = () => {
         if (this.rows.length > 0) {
             let row = this.dataPage.getRowNum(0);
-            //console.log('-------------------------' , this.rows.entries())
             for (let [index, row] of this.rows.entries()) {
-                //console.log('---------------', index);
-                //console.log('---------------', row);
                 row.__rownum = index++;//__rownum是内部编号,不对外提供
                 row.__row = index;
             }
@@ -1411,20 +1402,16 @@ class Engine {
                 for (amn in ld) {
                     let vs = ld[amn];
                     apapter=this.getAdapter(amn);
-                    console.log('---------------------------------loadData:---------140');
                     if (apapter) {
                         for (var vn in vs) {
                             // view = $e.getView(vn, amn);
                             // if (view && view.changeProperty) {
-                            console.log('---------------------------------loadData:---------140-1');
                             apapter.changeViewProperty(vs[vn]['_child_or'] ? vs[vn]['_child_or'] : vs[vn]);
-                            console.log('---------------------------------loadData:---------140-2');
                             // }
                         }
                     }
                 }
             }
-            console.log('---------------------------------loadData:---------150');
         }
     }
 
@@ -1533,56 +1520,40 @@ class Engine {
     }
 
     ajax = (ajaxUrl, postData, options, resolve, reject) => {
-        console.log('postData ---------->',postData);
         if (this.delayed) {
             clearTimeout(this.delayed);
             this.delayed = null;
         }
 
-        console.log('$axios==>',$axios);
-
-        console.log('this.serialURL(ajaxUrl) ====>',this.serialURL(ajaxUrl));
         // this.serialURL(ajaxUrl)
         $axios({
             url : this.serialURL(ajaxUrl),
             method : 'POST',
             data : postData
         }).then((res) => {
-            console.log('res =====>',res);
-            console.log('-------------success---------' + JSON.stringify(res));
             if (res.status === 200) {
-                console.log('---1');
-                //console.log('ajax url==============================' + ajaxUrl + ', ------success---response---' + JSON.stringify(res.data));
                 try {
-                    console.log('---2',this);
                     this.loadData(res.data);
-                    console.log('--1-1');
                     let err = res.data['error'];
                     if (err) {
-                        console.log('---3');
                         if (err.code == 111) {
                             fn.exitSystem();
                             return;
                         }
                         throw res.data['error'];
                     } else if (res.data['message'] || res.data['msg']) {
-                        console.log('---4');
                         //提示性信息按异常处理
                         throw {code: 101, message: res.data['message'] || res.data['msg']};
                     } else {
-                        console.log('---5');
                         resolve(res.data);
                     }
                 } catch (err) {
-                    console.log('---6');
                     reject(err);
                 }
             } else {
-                console.log('---7');
                 reject(res.data);
             }
         }).catch((res) => {
-            console.log('-----------fail-----------' + JSON.stringify(res));
             let msg = "";
             switch (res.status) {
                 case 400:
@@ -1635,125 +1606,6 @@ class Engine {
         })
 
     };
-
-
-    ajax2 = (ajaxUrl, postData, options, resolve, reject) => {
-        if (this.delayed) {
-            clearTimeout(this.delayed);
-            this.delayed = null;
-        }
-        // this.delayed = setTimeout(() => {
-        //     uni.showLoading({
-        //         mask: true,
-        //         title: '请稍候...'
-        //     })
-        // }, 100);
-        // resolve=resolve||(()=>{});
-        // reject=reject ||(()=>{});
-        console.log('---------postData------' + JSON.stringify(postData))
-        console.log('---------ajaxURL------' + this.serialURL(ajaxUrl))
-
-        let setting = {
-            url: this.serialURL(ajaxUrl),
-            data: postData,
-            header: {
-                'content-type': 'application/json'
-            },
-            method: 'POST',
-            dataType: 'json',
-            responseType: "text",
-            success: (res) => {
-                console.log('-------------success---------' + JSON.stringify(res));
-                if (res.statusCode === 200) {
-                    //console.log('ajax url==============================' + ajaxUrl + ', ------success---response---' + JSON.stringify(res.data));
-                    try {
-                        this.loadData(res.data);
-                        let err = res.data['error'];
-                        if (err) {
-                            if (err.code == 111) {
-                                fn.exitSystem();
-                                return;
-                            }
-                            throw res.data['error'];
-                        } else if (res.data['message'] || res.data['msg']) {
-                            //提示性信息按异常处理
-                            throw {code: 101, message: res.data['message'] || res.data['msg']};
-                        } else {
-                            resolve(res.data);
-                        }
-                    } catch (err) {
-                        reject(err);
-                    }
-                } else {
-                    reject(res.data);
-                }
-            },
-
-            fail: (res) => {
-                console.log('-----------fail-----------' + JSON.stringify(res));
-                let msg = "";
-                switch (res.status) {
-                    case 400:
-                        msg = "错误请求";
-                        break;
-                    case 401:
-                        msg = "访问拒绝";
-                        break;
-                    case 403:
-                        msg = "拒绝访问";
-                        break;
-                    case 404:
-                        msg = "请求错误，未找到该资源";
-                        break;
-                    case 405:
-                        msg = "请求方法未允许";
-                        break;
-                    case 408:
-                        msg = "请求超时";
-                        break;
-                    case 500:
-                        msg = "服务器端出错";
-                        break;
-                    case 501:
-                        msg = "网络未实现";
-                        break;
-                    case 502:
-                        msg = "网络错误";
-                        break;
-                    case 503:
-                        msg = "服务不可用";
-                        break;
-                    case 504:
-                        msg = "网络超时";
-                        break;
-                    case 505:
-                        msg = "http版本不支持该请求";
-                        break;
-                    default:
-                        msg = "http 未知错误！";
-                        break;
-                }
-                msg = {code: res.status, message: msg};//"Error code:"+res.status+","+msg;
-                reject(msg);
-            },
-
-            complete: function (res) {
-                if (this.delayed) {
-                    clearTimeout(this.delayed)
-                    this.delayed = null;
-                }
-                uni.hideLoading();
-            }
-        }
-        if (options) {
-            fn.extend(options, setting, true, true);
-        }
-
-
-        console.log('--------------------------------' + JSON.stringify(setting));
-
-        uni.request(setting);
-    }
 }
 
 class Adapter {
@@ -1817,33 +1669,19 @@ class Adapter {
      * @param isclear
      */
     outData(ado, isclear) {
-        console.log('--------outData-----', ado.getName())
-
 
         //必须事先已经建立映射关系
         let data = ado.getReflectData();
         if (data) {
-            console.log('ado=====getReflectData>',data);
             let name = ado.getName();
-            console.log('vue=======>',this.vue);
-            console.log('name1=====>',name);
-            console.log('name=======>',this[name]['rows']);
             let rows0 = this.vue.$data[this[name]['rows']];
-            console.log('get in to refresh ===========>refresh', data.type);
             if (data.type == 'refresh') {
-                console.log('get in to refresh ===========outData> 0:',rows0.length);
-                console.log('get in to refresh ===========outData> 1:',data.rows.length);
                 if (!!data.clear) {
-                    console.log('get in to refresh ===========outData> 2:',rows0);
                     rows0.splice(0, rows0.length);
                 }
-                console.log('get in to refresh ===========outData> 3:',data.rows);
                 data.rows.forEach((item) => {
                     rows0.push(item)
                 })
-                console.log('get in to refresh ===========outData> last:',rows0.length);
-
-                console.log('get in to refresh ===========>rows0', rows0);
 
                 // rows0 = rows0.concat(data.rows)
                 //rows0.splice(rows0.length,0,data.rows);

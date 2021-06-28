@@ -36,11 +36,13 @@
                 </div>
             </van-cell-group>
 
+            <p v-if="partList.length === 0" style="color: #969799;font-size: 14px;line-height: 50px;text-align: center;">请点击搜索按钮,搜索数据</p>
 
                 <van-list
                         v-model="loading"
                         :finished="finished"
                         finished-text="没有更多了"
+                        :immediate-check = "false"
                         @load="onLoad"
                 >
 
@@ -62,16 +64,6 @@
 
 
                 </van-list>
-
-
-<!--            <van-list-->
-<!--                    v-model="loading"-->
-<!--                    :finished="finished"-->
-<!--                    finished-text="没有更多了"-->
-<!--                    @load="onLoad"-->
-<!--            >-->
-<!--                <van-cell v-for="item in list" :key="item" :title="item" />-->
-<!--            </van-list>-->
 
 
 
@@ -161,11 +153,6 @@
         },
 
         beforeCreate(){
-            if (!this.__count){
-                this.__count=0;
-            }
-            this.__count++;
-            console.log('ado==>in get in before __count:'+this.__count);
             if(!this.$e){
                 this.$e = new this.$Engine();
             }
@@ -218,35 +205,12 @@
 
         methods : {
 
-            // onLoad() {
-            //     console.log('onloading---->');
-            //
-            //     // 异步更新数据
-            //     // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-            //     setTimeout(() => {
-            //         console.log('onloading---->2');
-            //         for (let i = 0; i < 10; i++) {
-            //             this.list.push(this.list.length + 1);
-            //         }
-            //
-            //         // 加载状态结束
-            //         this.loading = false;
-            //
-            //         // 数据全部加载完成
-            //         if (this.list.length >= 40) {
-            //             this.finished = true;
-            //         }
-            //     }, 1000);
-            // },
-
             onLoad : function(){
                 let vm = this;
 
-                vm.loading = false;
                 let ado = this.$e.getADO(page_static.comp_ado_name,page_static.moduleName);
                 if(ado){
                     ado.nextPage().then(res => {
-                        console.log('onloading---->2');
                         vm.loading = false;
 
                         if(!ado.hasNextPage()){
@@ -332,6 +296,10 @@
                         Toast('仓库没有找到该车型的零部件.');
                     }
                     // vm.finishedText = "没有更多了"
+
+                    if(vm.partList.length < 18){
+                        vm.finished = true;
+                    }
                 }).catch(err => {
                     console.log('err',err);
                 })
