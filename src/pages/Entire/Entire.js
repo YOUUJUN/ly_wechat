@@ -1,17 +1,47 @@
 import Vue from 'vue'
 import Home from './Entire.vue'
+import router from '../../router/entire_router.js'
 import store from '../../store/index'
 import Engine from './../../utils/engine_module.js';
 Vue.prototype.$Engine = Engine;
 
-import {NavBar, Form, Field, Image as VanImage, Grid, GridItem, ImagePreview} from 'vant';
+import {
+  Button,
+  Cell,
+  CellGroup,
+  Field,
+  NavBar,
+  Tab,
+  Tabs,
+  Card,
+  Popup,
+  IndexBar,
+  IndexAnchor,
+  Swipe,
+  SwipeItem,
+  Lazyload,
+  Form,
+  Col,
+  Row
+} from 'vant';
 Vue.use(NavBar);
-Vue.use(Form);
+Vue.use(CellGroup);
+Vue.use(Cell);
 Vue.use(Field);
-Vue.use(VanImage);
-Vue.use(Grid);
-Vue.use(GridItem);
-Vue.use(ImagePreview);
+Vue.use(Button);
+Vue.use(Tab);
+Vue.use(Tabs);
+Vue.use(Card);
+Vue.use(Popup);
+Vue.use(IndexBar);
+Vue.use(IndexAnchor);
+Vue.use(Swipe);
+Vue.use(SwipeItem);
+Vue.use(Lazyload);
+Vue.use(Form);
+Vue.use(Col);
+Vue.use(Row);
+
 
 
 let bus = new Vue;
@@ -20,6 +50,7 @@ Vue.prototype.$bus = bus;
 Vue.config.productionTip = false;
 
 new Vue({
+  router,
   store,
   render: h => h(Home)
 }).$mount('#app');

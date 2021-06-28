@@ -79,7 +79,6 @@
                     </template>
 
 
-
                 </van-index-bar>
 
 
