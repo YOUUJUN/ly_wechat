@@ -1044,7 +1044,7 @@ class ADOAgent {
             });
        }
 
-        return new Promise.resolve('');
+        return Promise.resolve('');
        //return false;
     };
 
@@ -1067,7 +1067,7 @@ class ADOAgent {
         if (pg.getCurrentPage() < pg.getPageCount() - 1) {
             return this.toPage(pg.getCurrentPage() + 1, options);
         }
-        return new Promise.resolve('');
+        return Promise.resolve('');
     };
 
     release = () => {

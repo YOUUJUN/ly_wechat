@@ -22,7 +22,10 @@ import {
   Lazyload,
   Form,
   Col,
-  Row
+  Row,
+  Empty,
+  ActionSheet,
+  List
 } from 'vant';
 Vue.use(NavBar);
 Vue.use(CellGroup);
@@ -41,6 +44,10 @@ Vue.use(Lazyload);
 Vue.use(Form);
 Vue.use(Col);
 Vue.use(Row);
+Vue.use(Empty);
+Vue.use(ActionSheet);
+Vue.use(List);
+
 
 
 

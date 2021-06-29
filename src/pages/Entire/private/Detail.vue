@@ -60,6 +60,14 @@
 </template>
 
 <script>
+
+    const detail_module = {
+        moduleName: 'wx_car_show_bill',
+        action_edit: 'Edit',
+        list_ado_name: 'data_m',
+        img_ado_name: 'data_d',
+    };
+
     export default {
         name: "Detail",
 
@@ -70,6 +78,9 @@
                     'https://img01.yzcdn.cn/vant/apple-2.jpg',
                     'https://img01.yzcdn.cn/vant/apple-3.jpg',
                 ],
+
+                dataList : [],
+                imgList : []
             };
         },
 

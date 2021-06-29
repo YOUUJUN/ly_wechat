@@ -31,7 +31,7 @@
 
                     <van-field
                             v-model="brandSeriesText"
-                            :value="brandSeriesText"
+                            :value="brandSeries"
                             center
                             clearable
                             label="车辆品牌系列"
@@ -39,7 +39,7 @@
                     >
                         <template #button>
                             <van-button size="small" type="primary" style="margin-right:4px;" @click="openChoiceBrand()">选择</van-button>
-                            <van-button size="small" type="primary" @click="search">搜索</van-button>
+                            <van-button size="small" type="primary" @click="search()">搜索</van-button>
                         </template>
                     </van-field>
 
@@ -47,84 +47,47 @@
             </van-cell-group>
 
 
-            <van-tabs animated :ellipsis="false">
-                <van-tab title="轿车">
+            <van-tabs animated :ellipsis="false" v-model="activeName" @click="tabClick">
+
+                <van-tab v-for="tab of tabList" :title="tab" :name="tab">
 
                     <div class="list">
 
-                        <van-card
-                                class="list-item"
-                                title="品牌型号：大众桑塔纳"
-                                desc="全车配件"
-                                thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
+                        <van-list
+                                v-model="loading"
+                                :finished="finished"
+                                finished-text="没有更多了"
+                                :immediate-check = "false"
+                                @load="onLoad"
                         >
-                            <template #desc>
-                                <div style="color: #646566;font-size: 12px;margin:5px 0;">车型：轿车</div>
-                                <div style="color: #646566;font-size: 12px;">全车配件</div>
+
+                            <template v-for="item of carList">
+                                <van-card
+                                        class="list-item"
+                                        :title="'品牌型号：'+item.brands"
+                                        :thumb="buildSrc(item, item.__rowid)"
+                                        @click="goDetail(item.__rowid)"
+                                >
+                                    <template #desc>
+                                        <div style="color: #646566;font-size: 12px;margin:5px 0;">车型：{{tab}}</div>
+                                        <div style="color: #646566;font-size: 12px;">全车配件</div>
+                                    </template>
+                                    <template #num>
+                                        <span style="color: #969799;font-size: 12px;">入库时间：{{new Date(item.bill_date).toLocaleDateString()}}</span>
+                                    </template>
+
+                                </van-card>
+
                             </template>
-                            <template #num>
-                                <span style="color: #969799;font-size: 12px;">入库时间：2021-6-28</span>
-                            </template>
 
-                        </van-card>
+                        </van-list>
+
 
                     </div>
 
                 </van-tab>
 
-                <van-tab title="摩托车">
 
-                    <div class="list">
-
-                        <van-card
-                                class="list-item"
-
-                                num="2"
-                                price="2.00"
-                                desc="描述信息"
-                                title="商品标题"
-                                thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-                        />
-
-                    </div>
-
-                </van-tab>
-
-                <van-tab title="中小型客货车">
-
-                    <div class="list">
-
-                        <van-card
-                                class="list-item"
-
-                                num="2"
-                                price="2.00"
-                                desc="描述信息"
-                                title="商品标题"
-                                thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-                        />
-
-                    </div>
-
-                </van-tab>
-
-                <van-tab title="大型客货车">
-
-                    <div class="list">
-
-                        <van-card
-                                class="list-item"
-
-                                num="2"
-                                price="2.00"
-                                desc="描述信息"
-                                title="商品标题"
-                                thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-                        />
-
-                    </div>
-
-                </van-tab>
             </van-tabs>
 
 
@@ -147,6 +110,8 @@
 
             </van-popup>
 
+            <van-action-sheet v-model="showBottom" :actions="viewData.serial" @select="onSelect" />
+
         </main>
 
         <footer>
@@ -158,11 +123,15 @@
 </template>
 
 <script>
+    import { Toast } from 'vant';
 
     const main_module = {
         groupName: 'wx_car_show_desk',
         moduleName: 'wx_car_show_desk',
-    }
+        ado : 'data_list',
+        action_edit : 'bill.Edit',
+        action_refresh: 'filter.Refresh'
+    };
 
     const brand_module = {
         moduleName: 'phone_brands_list',
@@ -177,10 +146,22 @@
                 brand : '',
                 series : '',
                 brandSeriesText : '',
+                activeName : '轿车',
+                tabList : ['轿车', '摩托车', '中小型客货车', '大型客货车'],
 
                 brandsList :[],
 
-                showBrand : false
+                viewData: {
+                    serial : []
+                },
+
+                carList : [],
+
+                showBrand : false,
+                showBottom : false,
+
+                loading: false,
+                finished: false,
             }
         },
 
@@ -191,7 +172,12 @@
         created(){
             let adapter = this.$e.getActiveModule(brand_module.moduleName, true).createAdapter(this, true);
             adapter.mappingData(brand_module.comp_ado_name, "brandsList");
+
+            adapter = this.$e.getActiveModule(main_module.moduleName, true).createAdapter(this, true);
+            adapter.mappingData(main_module.ado, "carList");
             this.getBrandsData();
+
+            this.search();
         },
 
         computed : {
@@ -214,7 +200,7 @@
             },
 
             brandSeries (){
-                let brandSeries = this.brand.concat(" ",this.series);
+                let brandSeries = this.brand.concat(this.series);
                 this.brandSeriesText = brandSeries;
                 return brandSeries
             }
@@ -222,6 +208,21 @@
         },
 
         methods :{
+            onLoad : function(){
+                let vm = this;
+
+                let ado = this.$e.getADO(main_module.ado,main_module.moduleName);
+                if(ado){
+                    ado.nextPage().then(res => {
+                        vm.loading = false;
+
+                        if(!ado.hasNextPage()){
+                            vm.finished = true;
+                        }
+                    });
+                }
+            },
+
             onClickLeft(){
                 document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
                 WeixinJSBridge.call('closeWindow');
@@ -242,6 +243,108 @@
                     console.log("this.brandsList ===>",vm.brandsList);
                 });
 
+            },
+
+            openChoiceSerial(name){
+                this.brand = name;
+                this.series = "";
+                this.$e.call(brand_module.moduleName, brand_module.action_get, null, null, {
+                    params: {
+                        car_brands: name,
+                    }
+                }).then(res => {
+                    let s=this.$e.getEnv('var_serial');
+                    let arr = s.split(';');
+                    arr = arr.map((current, index, arr) => {
+                        let obj = {};
+                        obj.name = current;
+                        return obj;
+                    });
+                    this.viewData.serial = arr;
+                    console.log('length',arr);
+                    if(s){
+                        this.showBottom = true;
+                    }else{
+                        Toast('该车型无系列');
+                    }
+                }).finally(() => {
+                    this.showBrand = false;
+                });
+            },
+
+            onSelect(item){
+                this.series = item.name;
+                this.showBottom = false;
+            },
+
+            buildSrc (item, rowid){
+                let url = "https://img01.yzcdn.cn/vant/empty-image-search.png";
+                if(item.img_path){
+                    url = `http://erp.yuchengchina.com:15280/cloud?_amn=wx_car_show_desk&_mn=wx_car_show_desk&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_car_show_desk&_checkid=${this.$e._checkid}`;
+                }
+                return url;
+            },
+
+            search(){
+                let vm = this;
+
+                let brands = this.brandSeriesText;
+                let car_kind_name = this.activeName;
+                let payLoad = {
+                    brands,
+                    car_kind_name
+                };
+
+                for(let item in payLoad){
+                    if(payLoad[item] === ''){
+                        delete payLoad[item];
+                    }
+                }
+
+                this.$e.call(main_module.moduleName, main_module.action_refresh, null, payLoad, {
+                    params: {
+
+                    }
+                }).then(res => {
+                    console.log('res',res);
+                    console.log('---------->list',vm.carList);
+                    if(vm.carList.length == 0){
+                        Toast('仓库没有找到该车型的零部件.');
+                    }
+
+                    if(vm.carList.length < 10){
+                        vm.finished = true;
+                    }
+                }).catch(err => {
+                    console.log('err',err);
+                })
+
+            },
+
+            tabClick(name, title){
+                this.search();
+            },
+
+            goDetail(rowid){
+                let vm = this;
+                this.$e.call(main_module.moduleName, main_module.action_edit, null, null, {
+                    params: {
+                        rowid : rowid
+                    }
+                }).then(res => {
+                    console.log('res',res);
+                    vm.$router.push({
+                        name: 'detail',
+                        // params: { $e: this.$e },
+                        query: {
+                            amgn : this.$e._amgn,
+                            checkid : this.$e._checkid,
+                            rowid : rowid
+                        }
+                    });
+                }).catch(err => {
+                    console.log('err',err);
+                });
             },
 
         }
