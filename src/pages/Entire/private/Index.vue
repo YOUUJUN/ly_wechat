@@ -64,7 +64,7 @@
                             <template v-for="item of carList">
                                 <van-card
                                         class="list-item"
-                                        :title="'品牌型号：'+item.brands"
+                                        :title="'品牌系列：'+item.brands"
                                         :thumb="buildSrc(item, item.__rowid)"
                                         @click="goDetail(item.__rowid)"
                                 >
@@ -309,7 +309,7 @@
                     console.log('res',res);
                     console.log('---------->list',vm.carList);
                     if(vm.carList.length == 0){
-                        Toast('仓库没有找到该车型的零部件.');
+                        Toast('仓库没有找到该品牌系列的车型.');
                     }
 
                     if(vm.carList.length < 10){
@@ -335,10 +335,9 @@
                     console.log('res',res);
                     vm.$router.push({
                         name: 'detail',
-                        // params: { $e: this.$e },
                         query: {
                             amgn : this.$e._amgn,
-                            checkid : this.$e._checkid,
+                            checkid : vm.$e._checkid,
                             rowid : rowid
                         }
                     });

@@ -25,7 +25,9 @@ import {
   Row,
   Empty,
   ActionSheet,
-  List
+  List,
+  Tag,
+  ImagePreview
 } from 'vant';
 Vue.use(NavBar);
 Vue.use(CellGroup);
@@ -47,6 +49,8 @@ Vue.use(Row);
 Vue.use(Empty);
 Vue.use(ActionSheet);
 Vue.use(List);
+Vue.use(Tag);
+Vue.use(ImagePreview);
 
 
 
