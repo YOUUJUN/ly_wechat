@@ -69,8 +69,8 @@
                                         @click="goDetail(item.__rowid)"
                                 >
                                     <template #desc>
-                                        <div style="color: #646566;font-size: 12px;margin:5px 0;">车型：{{tab}}</div>
-                                        <div style="color: #646566;font-size: 12px;">全车配件</div>
+                                        <div style="color: #646566;font-size: 12px;margin-top:4px;">车型：{{tab}}<span style="margin-left: 8px;">全车配件</span></div>
+                                        <div style="color: #646566;font-size: 12px;margin-top:4px;">年款：{{item.nk}}</div>
                                     </template>
                                     <template #num>
                                         <span style="color: #969799;font-size: 12px;">入库时间：{{new Date(item.bill_date).toLocaleDateString()}}</span>
