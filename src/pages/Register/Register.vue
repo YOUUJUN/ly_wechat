@@ -81,20 +81,22 @@
         beforeCreate(){
             this.$e = new this.$Engine();
             this.$e._amgn = page_static.model_name;
+        },
 
+
+        created(){
             let is_ok = localStorage.getItem("is_ok");
             let phone = localStorage.getItem("phone");
             console.log('is_ok---->from beforeCreate',is_ok);
             console.log('phone---->from beforeCreate',phone);
             if(is_ok == 1){
                 console.log(`----let's go-----`);
-                window.open('/old_part/Query.html','_self');
+                let result = this.getQuery();
+                if(result){
+                    window.open(`/old_part/${result}`,'_self');
+                }
+
             }
-        },
-
-
-        created(){
-
         },
 
 
@@ -116,7 +118,10 @@
                     console.log('res.data.envs.is_ok===>',res.envs.is_ok);
                     localStorage.setItem("is_ok",res.envs.is_ok);
                     localStorage.setItem("phone",this.phone);
-                    window.open('/old_part/Query.html','_self');
+                    let result = this.getQuery();
+                    if(result){
+                        window.open(`/old_part/${result}`,'_self');
+                    }
                 }).catch(err => {
                     console.log('err===>00',err);
                     Toast('验证码验证失败!');
@@ -138,7 +143,18 @@
                 }).catch((err => {
                     Toast(err.message);
                 }));
+            },
+
+             getQuery() {
+                 let search = location.search;
+                 let arr = search.split('=');
+                 let target = arr[1];
+                 if(target){
+                     return target;
+                 }
+                 return false;
             }
+
 
         }
     };

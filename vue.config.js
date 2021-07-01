@@ -84,7 +84,7 @@ module.exports = function(){
         publicPath : '/',
         outputDir : './dist/vue-public',
         assetsDir : "static",
-        filenameHashing : false,
+        filenameHashing : true,
         pages : buildPageSync(),
         devServer : {
             port : 8080,
