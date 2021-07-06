@@ -4,7 +4,7 @@
         <header>
 
             <van-nav-bar
-                    title="旧件查询"
+                    title="手机验证"
                     left-text="返回"
                     left-arrow
                     @click-left="onClickLeft"
