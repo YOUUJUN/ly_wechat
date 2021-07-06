@@ -23,15 +23,15 @@
 
                     <van-field
                             v-model="price"
-                            name="废铁收购价(元/吨)"
-                            label="废铁收购价(元/吨)"
+                            name="收购价格(元/吨)"
+                            label="收购价格(元/吨)"
                             label-width="120"
                             left-icon="question-o"
                     >
                         <template #left-icon>
 
                             <van-popover v-model="showPopover1" trigger="click" placement="bottom-start" theme="dark">
-                                <div class="pop-panel">近期钢铁厂收购废铁的大致价格</div>
+                                <div class="pop-panel">参考三钢对外发布的废钢收购价格适时调整</div>
                                 <template #reference>
                                     <van-icon name="question-o" />
                                 </template>
@@ -64,31 +64,32 @@
 
                     </van-field>
 
-                    <van-field
-                            v-model="impurity"
-                            name="扣杂率"
-                            label="扣杂率"
-                            label-width="120"
-                    >
-                        <template #left-icon>
+<!--                    <van-field-->
+<!--                            v-model="impurity"-->
+<!--                            name="扣杂率"-->
+<!--                            label="扣杂率"-->
+<!--                            label-width="120"-->
+<!--                    >-->
+<!--                        <template #left-icon>-->
 
-                            <van-popover v-model="showPopover3" trigger="click" placement="bottom-start" theme="dark">
-                                <div class="pop-panel">车辆废铁之外的重量</div>
-                                <template #reference>
-                                    <van-icon name="question-o" />
-                                </template>
+<!--                            <van-popover v-model="showPopover3" trigger="click" placement="bottom-start" theme="dark">-->
+<!--                                <div class="pop-panel">车辆废铁之外的重量</div>-->
+<!--                                <template #reference>-->
+<!--                                    <van-icon name="question-o" />-->
+<!--                                </template>-->
 
-                            </van-popover>
+<!--                            </van-popover>-->
 
-                        </template>
+<!--                        </template>-->
 
-                    </van-field>
+<!--                    </van-field>-->
 
                     <van-field
                             v-model="serviceFee"
-                            name="服务费率"
-                            label="服务费率"
+                            name="服务费"
+                            label="服务费"
                             label-width="120"
+                            readonly
                     >
                         <template #left-icon>
 
@@ -106,8 +107,8 @@
 
                     <van-field
                             v-model="distance"
-                            name="距离最近门店的距离(公里)"
-                            label="距离最近门店的距离(公里)"
+                            name="距离报废厂里程(公里)"
+                            label="距离报废厂里程(公里)"
                             label-width="120"
                             type="number"
                             placeholder="请输入距离，自送输0"
@@ -116,7 +117,7 @@
                         <template #left-icon>
 
                             <van-popover v-model="showPopover5" trigger="click" placement="bottom-start" theme="dark">
-                                <div class="pop-panel">车辆停放处距离所选择的门店的记录，参考高德、百度、腾讯等地图。若选择自己开车到最近门店，则距离填0。</div>
+                                <div class="pop-panel">车辆停放处距离环城报废厂的里程，参考高德、百度、腾讯等地图。若选择自己开车到报废厂，则距离填0。</div>
                                 <template #reference>
                                     <van-icon name="question-o" />
                                 </template>
@@ -187,12 +188,12 @@
 
             <div class="alert">
 
-                <p>1.计算公式:即车辆回收价格预估:废铁收购价（元/公斤）*车辆整备质量（公斤）*（1-扣杂率）*（1-服务费率）-拖车费-三元催化及电瓶扣款</p>
-                <p>2.废铁收购价：近期钢铁厂收购废铁的大致价格</p>
+                <p>1.估价公式：整备质量*回收价格-服务费-运费-完整率扣款</p>
+                <p>2.回收价格：参考三钢对外发布的废钢收购价格适时调整。</p>
                 <p>3.车辆整备质量：请查阅车辆行驶证副页上的“整备质量”</p>
                 <p>4.扣杂率：即车辆废铁之外的重量</p>
-                <p>5.服务费率：即收购点收购车辆、办理手续等服务的费率</p>
-                <p>6.距离最近门店的距离：车辆停放处距离所选择的门店的记录，参考高德、百度、腾讯等地图。若选择自己开车到最近门店，则距离填0。</p>
+                <p>5.服务费：回收总价的15%</p>
+                <p>6.距离环城报废厂的里程：车辆停放处距离环城报废厂的里程，参考高德、百度、腾讯等地图。若选择自己开车到报废厂，则距离填0。</p>
                 <p>7.三元催化是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
                 <p>8.电瓶是否完整：若没有拆过，则选择“完整”，否则选择“缺失”</p>
 
@@ -234,7 +235,7 @@
                 ifBattery : '',
                 ifTWC : '',
                 distance : '',
-                serviceFee : '15%',
+                serviceFee : '',
                 impurity : '20%',
                 weight : '',
                 price : 300,
@@ -275,9 +276,10 @@
                 this.cover_price_num = newData.cover_price;
 
                 this.impurity = this.toPercent(newData.impurity);
-                this.serviceFee = this.toPercent(newData.cover_price);
+                // this.serviceFee = this.toPercent(newData.cover_price);
 
                 this.max_distance = newData.traffic_distince;
+                this.start_traffice_fee = newData.start_traffice_fee;
                 this.extraPrice = newData.km_price;
 
                 this.price = newData.fg_price;
@@ -339,7 +341,8 @@
 
             doCalc(){
                 // 整备质量*三钢上月包块均价*(1-扣杂率)*（1-服务费率）-运费-完整率扣款
-                let carriage = 300;
+                // 改动为：整备质量*三钢上月包块均价*（1-服务费率）-运费-完整率扣款
+                let carriage = this.start_traffice_fee;
 
                 if(this.distance > this.max_distance){
                     let extra = (this.distance - this.max_distance) * this.extraPrice;
@@ -359,8 +362,11 @@
 
                 console.log('Debit==>',Debit);
 
+                let cover_price = (this.weight / 1000) * this.price * this.cover_price_num;
+                console.log('cover_price==>',cover_price);
+                this.serviceFee = cover_price;
 
-                let result = (this.weight / 1000) * this.price * (1 - this.impurity_num) * (1 - this.cover_price_num) - carriage - Debit;
+                let result = (this.weight / 1000) * this.price - cover_price - carriage - Debit;
                 this.result = parseInt(result);
                 // Toast(result);
                 this.showResult = true;
