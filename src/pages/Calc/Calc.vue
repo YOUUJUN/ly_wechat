@@ -344,9 +344,13 @@
                 // 改动为：整备质量*三钢上月包块均价*（1-服务费率）-运费-完整率扣款
                 let carriage = this.start_traffice_fee;
 
-                if(this.distance > this.max_distance){
-                    let extra = (this.distance - this.max_distance) * this.extraPrice;
-                    carriage += extra;
+                if(this.distance > 0){
+                    if(this.distance > this.max_distance){
+                        let extra = (this.distance - this.max_distance) * this.extraPrice;
+                        carriage += extra;
+                    }
+                }else{
+                    carriage = 0;
                 }
 
                 console.log('carriage===>',carriage);
@@ -364,7 +368,7 @@
 
                 let cover_price = (this.weight / 1000) * this.price * this.cover_price_num;
                 console.log('cover_price==>',cover_price);
-                this.serviceFee = cover_price;
+                this.serviceFee = parseInt(cover_price);
 
                 let result = (this.weight / 1000) * this.price - cover_price - carriage - Debit;
                 this.result = parseInt(result);
