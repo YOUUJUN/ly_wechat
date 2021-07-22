@@ -280,7 +280,7 @@
             buildSrc (item, rowid){
                 let url = "https://img01.yzcdn.cn/vant/empty-image-search.png";
                 if(item.img_path){
-                    url = `http://erp.yuchengchina.com:15280/cloud?_amn=wx_car_show_desk&_mn=wx_car_show_desk&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_car_show_desk&_checkid=${this.$e._checkid}`;
+                    url = `/cloud?_amn=wx_car_show_desk&_mn=wx_car_show_desk&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_car_show_desk&_checkid=${this.$e._checkid}`;
                 }
                 return url;
             },

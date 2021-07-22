@@ -15,7 +15,7 @@ const errorCaptured = async (asyncFunc, ...params) =>{
 // const baseURL = "http://60.173.9.77:15280/";
 
 
-const baseURL = "http://erp.yuchengchina.com:15280/";
+const baseURL = "http://112.30.151.101:15280/";
 
 const myAxios =  (options = {}) => {
 
