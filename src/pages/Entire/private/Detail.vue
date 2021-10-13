@@ -143,7 +143,9 @@
             adapter.mappingData(detail_module.sale_ado_name, "saleList");
 
             this.$e.call(detail_module.moduleName, detail_module.action_edit, null, null, {
-
+                params: {
+                    carid : this.$route.query.carid
+                }
             }).then(res => {
                 console.log('res',res);
                 console.log('dataList========>',vm.dataList);
@@ -173,7 +175,7 @@
             buildSrc (item, rowid){
                 let url = "https://img01.yzcdn.cn/vant/empty-image-search.png";
                 if(item.img_path){
-                    url = `/cloud?_amn=wx_car_show_bill&_mn=wx_car_show_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_car_show_desk&_checkid=${this.$route.query.checkid}`;
+                    url = `/cloud?_amn=wx_car_show_bill&_mn=wx_car_show_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_car_show_desk&_checkid=${this.$e._checkid}`;
                 }
                 console.log('url',url);
                 return url;

@@ -133,7 +133,10 @@
             adapter.mappingData(detail_module.img_ado_name, "imgList");
 
             this.$e.call(detail_module.moduleName, detail_module.action_edit, null, null, {
-
+                params: {
+                    barcode : this.$route.query.barcode,
+                    invoice_id : this.$route.query.invoice_id
+                }
             }).then(res => {
                 console.log('res',res);
                 console.log('dataList========>',vm.dataList);
@@ -170,7 +173,7 @@
 
 
             buildSrc (rowid){
-                let url = `/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=${this.$route.query.checkid}`;
+                let url = `/cloud?_amn=wx_old_part_buy_bill&_mn=wx_old_part_buy_bill&_name=image.Read&_rand=0.9726284176919381&rowid=${rowid}&_hasdata=0&_type=async&_amgn=wx_old_part_buy&_checkid=${this.$e._checkid}`;
                 console.log('url',url);
                 return url;
             },

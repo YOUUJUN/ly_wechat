@@ -47,7 +47,7 @@
                 >
 
 
-                    <van-cell value="查看详情" is-link v-for="item of partList" @click="goDetail(item.__rowid)">
+                    <van-cell value="查看详情" is-link v-for="item of partList" @click="goDetail(item, item.__rowid)">
                         <template #title>
                             <span class="custom-title" style="font-size: 15px">{{item.m_name}}</span>
                             <!--                            <van-tag type="danger">标签</van-tag>-->
@@ -304,7 +304,7 @@
                 })
             },
 
-            goDetail(rowid){
+            goDetail(item, rowid){
                 let vm = this;
                 this.$e.call(page_static.moduleName, page_static.action_edit, null, null, {
                     params: {
@@ -318,6 +318,8 @@
                         query: {
                             amgn : this.$e._amgn,
                             checkid : this.$e._checkid,
+                            barcode: item.bar_code,
+                            invoice_id : item.invoice_id,
                             rowid : rowid
                         }
                     });

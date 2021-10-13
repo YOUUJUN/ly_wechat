@@ -66,7 +66,7 @@
                                         class="list-item"
                                         :title="'品牌系列：'+item.brands"
                                         :thumb="buildSrc(item, item.__rowid)"
-                                        @click="goDetail(item.__rowid)"
+                                        @click="goDetail(item, item.__rowid)"
                                 >
                                     <template #desc>
                                         <div style="color: #646566;font-size: 12px;margin-top:4px;">车型：{{tab}}<span style="margin-left: 8px;">全车配件</span></div>
@@ -215,7 +215,6 @@
                 if(ado){
                     ado.nextPage().then(res => {
                         vm.loading = false;
-
                         if(!ado.hasNextPage()){
                             vm.finished = true;
                         }
@@ -325,7 +324,7 @@
                 this.search();
             },
 
-            goDetail(rowid){
+            goDetail(item, rowid){
                 let vm = this;
                 this.$e.call(main_module.moduleName, main_module.action_edit, null, null, {
                     params: {
@@ -338,6 +337,7 @@
                         query: {
                             amgn : this.$e._amgn,
                             checkid : vm.$e._checkid,
+                            carid : item.carid,
                             rowid : rowid
                         }
                     });
