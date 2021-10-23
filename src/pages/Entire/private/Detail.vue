@@ -39,7 +39,7 @@
                 </van-field>
                 <van-field name="radio" label="入库时间">
                     <template #input>
-                        <span>{{new Date(dataList[0].bill_date).toLocaleDateString()}}</span>
+                        <span>{{item.bill_date}}</span>
                     </template>
                 </van-field>
             </van-form>
@@ -181,10 +181,10 @@
                 return url;
             },
 
-            showImg(){
+            showImg() {
                 let vm = this;
                 ImagePreview(vm.images);
-            },
+            }
         }
     }
 </script>

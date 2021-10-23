@@ -73,7 +73,7 @@
                                         <div style="color: #646566;font-size: 12px;margin-top:4px;">年款：{{item.nk}}</div>
                                     </template>
                                     <template #num>
-                                        <span style="color: #969799;font-size: 12px;">入库时间：{{new Date(item.bill_date).toLocaleDateString()}}</span>
+                                        <span style="color: #969799;font-size: 12px;">入库时间：{{item.bill_date}}</span>
                                     </template>
 
                                 </van-card>
@@ -209,12 +209,14 @@
 
         methods :{
             onLoad : function(){
+                console.log('onLoad===>');
                 let vm = this;
 
                 let ado = this.$e.getADO(main_module.ado,main_module.moduleName);
                 if(ado){
                     ado.nextPage().then(res => {
                         vm.loading = false;
+                        vm.finished = false;
                         if(!ado.hasNextPage()){
                             vm.finished = true;
                         }
@@ -311,8 +313,11 @@
                         Toast('仓库没有找到该品牌系列的车型.');
                     }
 
+                    console.log('vm.carList.length', vm.carList.length, vm.finished);
                     if(vm.carList.length < 10){
                         vm.finished = true;
+                    }else{
+                        vm.finished = false;
                     }
                 }).catch(err => {
                     console.log('err',err);
@@ -344,8 +349,7 @@
                 }).catch(err => {
                     console.log('err',err);
                 });
-            },
-
+            }
         }
     }
 </script>
