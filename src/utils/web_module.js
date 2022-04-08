@@ -23,7 +23,7 @@ const myAxios =  (options = {}) => {
 
     let $axios = axios.create({
         baseURL,
-        withCredentials: false, //CORS
+        withCredentials: true, //CORS
     });
 
     return $axios(options);

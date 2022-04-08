@@ -7,8 +7,10 @@
             <van-nav-bar
                     title="车辆电子收购单生成"
                     left-text="返回"
+                    right-text="退出登录"
                     left-arrow
                     @click-left="onClickLeft"
+                    @click-right="onClickRight"
             />
 
         </header>
@@ -136,10 +138,10 @@
             this.$e.init(main_module.groupName, main_module.moduleName, null, {
                 _act: '',
             }).then(function (res) {
-
+                
                 vm.$e.call(main_module.moduleName, main_module.action_Add, null, null, {
                     params: {
-                        tel : '15656229989'
+                        tel : localStorage.getItem("phone")
                     }
                 }).then(res => {
                     console.log("this.info ===>",vm.info);
@@ -213,6 +215,11 @@
                 WeixinJSBridge.call('closeWindow');
             },
 
+            onClickRight(){
+                localStorage.removeItem("is_ok");
+                localStorage.removeItem("phone");
+                window.open(`/old_part/Register.html?page=Purchase.html`,'_self');
+            }
 
         
         }

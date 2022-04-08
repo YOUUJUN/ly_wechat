@@ -116,15 +116,24 @@
                 }).then(res => {
                     console.log('res===>',res);
                     console.log('res.data.envs.is_ok===>',res.envs.is_ok);
-                    localStorage.setItem("is_ok",res.envs.is_ok);
-                    localStorage.setItem("phone",this.phone);
-                    let result = this.getQuery();
-                    if(result){
-                        window.open(`/old_part/${result}`,'_self');
+                    if(res.envs.is_ok == -1){   
+                        Toast('验证码验证失败!');
+                        return;
+                    }else if(res.envs.is_ok == -2){   
+                        Toast('当前登录用户无效!');
+                        return;
+                    }else{
+                        localStorage.setItem("is_ok",res.envs.is_ok);
+                        localStorage.setItem("phone",this.phone);
+                        let result = this.getQuery();
+                        if(result){
+                            window.open(`/old_part/${result}`,'_self');
+                        }
                     }
+                    
                 }).catch(err => {
                     console.log('err===>00',err);
-                    Toast('验证码验证失败!');
+                    Toast('未知错误!');
                 });
             },
 
