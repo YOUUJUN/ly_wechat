@@ -61,9 +61,9 @@
     import { Toast } from 'vant';
 
     const page_static = {
-        model_name: 'wx_old_part_regist',
+        model_name: 'wx_car_purchase_desk',
         act_send : 'QueryVerifyCode',
-        act_post: 'Send',
+        act_post: 'Login',
     };
 
     export default {
@@ -145,14 +145,14 @@
                 }));
             },
 
-             getQuery() {
-                 let search = location.search;
-                 let arr = search.split('=');
-                 let target = arr[1];
-                 if(target){
-                     return target;
-                 }
-                 return false;
+            getQuery() {
+                let search = location.search;
+                let arr = search.split('=');
+                let target = arr[1];
+                if(target){
+                    return target;
+                }
+                return false;
             }
 
 

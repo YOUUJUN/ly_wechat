@@ -599,7 +599,7 @@ class ADOAgent {
             let cln = this.columns[col];
             let v1 = rd.__data[col];
             if (value) {
-                value = parseValue(value, cln.dataType, cln.precision);
+                value = fn.parseValue(value, cln.dataType, cln.precision);
             }
             if (v1 !== value) {
                 rd.__data[col] = value;
@@ -1739,10 +1739,15 @@ class Adapter {
         }
         if (cols !== 'none') {
             let row, idRows = ado.getRowIDMap();
+            console.log('idRows', idRows);
             let rows0 = this.vue.$data[this[name]['rows']];
             for (let i = 0; i < rows0.length; i++) {
-                row = idRows(rows0[i].__rowid);
-                if (!cols) {
+                console.log('idRows v1', idRows.get(rows0[i].__rowid));
+                console.log('idRows v2', idRows[rows0[i].__rowid]);
+                // row = idRows[rows0[i].__rowid];
+                row = idRows.get(rows0[i].__rowid);
+                console.log('cols', cols);
+                if (cols) {
                     for (let j = 0; j < cols.length; j++) {
                         ado.setValueAt(row, cols[j], rows0[i][cols[j]]);
                     }

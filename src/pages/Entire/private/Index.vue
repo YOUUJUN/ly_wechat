@@ -238,7 +238,7 @@
                 this.$e.init(main_module.groupName, main_module.moduleName, null, {
                     _act: '',
                 }).then(function (res) {
-
+                    console.log("this.brandsList ===>",vm.brandsList);
                 }).catch(err =>{
                     console.log("err ============>",err);
                     console.log("this.brandsList ===>",vm.brandsList);
