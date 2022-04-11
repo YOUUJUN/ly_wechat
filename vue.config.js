@@ -41,13 +41,32 @@ let externalConfig = [
 ];
 
 let getModulesVersion = () => {
+    let mvs = {};
+    let regexp = /^npm_package_.{0,3}dependencies_/gi;
+    for(let m in process.env){
+        if(regexp.test(m)){
+            mvs[m.replace(regexp, '').replace(/_/g, '-')] = process.env[m].replace(/(~|\^)/g, '');
+        }
+    }
+
+    return mvs;
+}
+
+let getDependenciesVersion = () => {
+    let mvs = {};
+    
     let json = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-    return json.dependencies;
+    let dependencies = json.dependencies;
+    for(let key in dependencies){
+        mvs[key] = dependencies[key].replace(/(~|\^)/g, '');
+    }
+    
+    return mvs;
 }
 
 let getExternalModules = (config) =>{
     let externals = {};
-    let dependencieModules = getModulesVersion();
+    let dependencieModules = getDependenciesVersion();
     config.forEach((item) => {
         if(item.name in dependencieModules){
             let version = dependencieModules[item.name];
