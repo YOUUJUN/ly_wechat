@@ -73,7 +73,7 @@
                                         <div style="color: #646566;font-size: 12px;margin-top:4px;">年款：{{item.nk}}</div>
                                     </template>
                                     <template #num>
-                                        <span style="color: #969799;font-size: 12px;">入库时间：{{item.bill_date}}</span>
+                                        <span style="color: #969799;font-size: 12px;">入库时间：{{new Date(item.bill_date).toLocaleString()}}</span>
                                     </template>
 
                                 </van-card>

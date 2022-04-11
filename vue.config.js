@@ -41,15 +41,8 @@ let externalConfig = [
 ];
 
 let getModulesVersion = () => {
-    let mvs = {};
-    let regexp = /^npm_package_.{0,3}dependencies_/gi;
-    for(let m in process.env){
-        if(regexp.test(m)){
-            mvs[m.replace(regexp, '').replace(/_/g, '-')] = process.env[m].replace(/(~|\^)/g, '');
-        }
-    }
-
-    return mvs;
+    let json = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    return json.dependencies;
 }
 
 let getExternalModules = (config) =>{
