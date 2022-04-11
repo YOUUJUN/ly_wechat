@@ -10,6 +10,11 @@
                     @click-left="onClickLeft"
             />
 
+            <van-notice-bar
+            left-icon="volume-o"
+            text="重要提示：本页面仅供环城汽车报废厂收车和内部员工使用，车主请勿尝试，若需查询“报废进度”请点击公众号--“福建环城再生“首页右下角”报废进度“。"
+            />
+
         </header>
 
         <main>
@@ -120,7 +125,7 @@
                         Toast('验证码验证失败!');
                         return;
                     }else if(res.envs.is_ok == -2){   
-                        Toast('当前登录用户无效!');
+                        Toast('当前登录用户无效!车主查询请移步至 报废进度查询');
                         return;
                     }else{
                         localStorage.setItem("is_ok",res.envs.is_ok);

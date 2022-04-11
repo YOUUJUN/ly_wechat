@@ -4,11 +4,12 @@ import store from '../../store/index'
 import Engine from './../../utils/engine_module.js';
 Vue.prototype.$Engine = Engine;
 
-import { NavBar, Form, Field, Button } from 'vant';
+import { NavBar, Form, Field, Button, NoticeBar } from 'vant';
 Vue.use(NavBar);
 Vue.use(Form);
 Vue.use(Field);
 Vue.use(Button);
+Vue.use(NoticeBar);
 
 
 
